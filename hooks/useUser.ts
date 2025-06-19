@@ -8,7 +8,7 @@ export function useUser() {
 
   const user = useMemo(() => {
     if (!userId) return null;
-    return users.find(u => u.id === userId);
+    return users.find(u => u._id === userId);
   }, [userId, users]);
 
   return user;
