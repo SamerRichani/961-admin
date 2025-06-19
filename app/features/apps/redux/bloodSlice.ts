@@ -41,11 +41,30 @@ const bloodSlice = createSlice({
       state.healthCenters.push(newCenter);
     },
     addSuspendedUser: (state) => {
+      const now = new Date().toISOString();
+      const mockUserId = `user_${Date.now()}`;
       const newSuspendedUser: SuspendedUser = {
+        _id: `SU${Date.now()}`,
         id: `SU${Date.now()}`,
-        username: state.newUsername,
-        suspendedAt: new Date().toISOString(),
-        reason: state.suspensionReason
+        userId: mockUserId, // Replace with actual userId if available
+        type: "blood_donation", // Adjust as needed
+        reason: state.suspensionReason,
+        isActive: true,
+        createdAt: now,
+        updatedAt: now,
+        suspendedAt: now,
+        __v: 0,
+        user: {
+          _id: mockUserId,
+          username: state.newUsername,
+          email: "",
+          fullName: "",
+          idVerified: false,
+          role: "",
+          isSuspended: true,
+          suspensionReason: state.suspensionReason,
+          suspendedAt: now
+        }
       };
       state.suspendedUsers.push(newSuspendedUser);
       state.newUsername = '';
