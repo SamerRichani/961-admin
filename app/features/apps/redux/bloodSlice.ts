@@ -31,11 +31,12 @@ const bloodSlice = createSlice({
     },
     addHealthCenter: (state, action: PayloadAction<Partial<HealthCenter>>) => {
       const newCenter: HealthCenter = {
-        id: `HC${Date.now()}`,
+        _id: `HC${Date.now()}`,
         name: action.payload.name!,
         location: action.payload.location!,
         coordinates: action.payload.coordinates!,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        __v: 0
       };
       state.healthCenters.push(newCenter);
     },
