@@ -41,6 +41,7 @@ export interface ContentData {
   views: number;
   growth: number;
   title: string;
+  creator: string;
 }
 
 export interface CreatorData {

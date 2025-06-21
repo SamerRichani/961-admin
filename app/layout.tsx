@@ -1,16 +1,16 @@
 'use client'
 import "./globals.css";
 import { LayoutWrapper } from "@/app/layout/LayoutWrapper";
-import { Roboto } from "next/font/google";
+import { Poppins } from "next/font/google";
 import { Provider } from 'react-redux';
 import { store } from '@/redux/store';
 import { Toaster } from "sonner";
 
-const roboto = Roboto({
-  weight: ['100', '300', '400', '500', '700', '900'],
+const poppins = Poppins({
+  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
   subsets: ["latin"],
   display: "swap",
-  variable: "--font-roboto",
+  variable: "--font-poppins",
 });
 
 export default function RootLayout({
@@ -19,8 +19,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={roboto.variable}>
-      <body className={roboto.className}>
+    <html lang="en" className={poppins.variable}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap" rel="stylesheet" />
+      </head>
+      <body className={poppins.className}>
           <Provider store={store}>
             <LayoutWrapper>
               {children}

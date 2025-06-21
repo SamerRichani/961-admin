@@ -63,11 +63,11 @@
   }
 
   body {
-    @apply bg-background text-foreground m-0 p-0 w-screen h-screen overflow-hidden font-['Roboto'] antialiased;
+    @apply bg-background text-foreground m-0 p-0 w-screen h-screen overflow-hidden font-['Poppins'] antialiased;
   }
 
   #root {
-    @apply w-screen h-screen m-0 p-0 overflow-hidden font-['Roboto'];
+    @apply w-screen h-screen m-0 p-0 overflow-hidden font-['Poppins'];
   }
 
   a {
@@ -75,7 +75,7 @@
   }
 
   h1 {
-    @apply text-[3.2em] leading-tight font-['Roboto'];
+    @apply text-[3.2em] leading-tight font-['Poppins'];
   }
 }
 
@@ -86,6 +86,10 @@
   
   .tab-trigger {
     @apply rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent;
+  }
+
+  .theme-font {
+    font-family: 'League Spartan', sans-serif;
   }
 }
 
