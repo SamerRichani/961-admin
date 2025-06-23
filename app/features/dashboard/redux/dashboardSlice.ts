@@ -95,9 +95,9 @@ const initialState: DashboardState = {
     }
   },
   topContent: [
-    { views: 45000, growth: 15.5, title: "Content Title 1" },
-    { views: 38000, growth: 12.3, title: "Content Title 2" },
-    { views: 32000, growth: 8.7, title: "Content Title 3" },
+    { views: 45000, growth: 15.5, title: "Content Title 1", creator: "Creator Name 1" },
+    { views: 38000, growth: 12.3, title: "Content Title 2", creator: "Creator Name 2" },
+    { views: 32000, growth: 8.7, title: "Content Title 3", creator: "Creator Name 3" },
   ],
   topCreators: [
     { earned: 3500, growth: 18.2, name: "Creator Name 1" },
