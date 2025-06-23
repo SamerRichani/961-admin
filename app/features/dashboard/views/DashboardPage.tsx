@@ -130,9 +130,8 @@ export function DashboardPage() {
       <div className="p-8">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          
-          {/* Time Period Dropdown */}
+          <h1 className="text-4xl font-bold text-gray-900">Dashboard</h1>
+
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="flex items-center space-x-2">

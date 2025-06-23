@@ -49,14 +49,18 @@ export function AnalyticsTabs({ children }: AnalyticsTabsProps) {
   return (
     <div className="bg-gray-50">
       <div className="max-w-[2000px] mx-auto p-8">
-        <div className="mb-8">
-          <h1 className="text-2xl font-semibold">Analytics Dashboard</h1>
+        <div className="mb-8 flex justify-between">
+          <h1 className="text-4xl font-bold">Analytics</h1>
+          <TimeRangeSelect
+              value={timeRange}
+              onValueChange={(value) => dispatch(setTimeRange(value))}
+          />
         </div>
         <Tabs value={activeTab} onValueChange={handleTabChange}>
-          <div className="bg-white border-b">
-            <div className="px-6 py-4 flex items-center justify-between">
-              <div className="overflow-x-auto scrollbar-hide">
-                <TabsList className="w-full justify-start border-b rounded-none h-12 bg-white gap-2 min-w-max">
+          <div className="mb-4">
+            <div className="py-4 flex items-center justify-between min-w-max w-full">
+              <div className="overflow-x-auto scrollbar-hide w-full">
+                <TabsList className="w-full justify-start border-b rounded-none gap-2 min-w-max">
                   <TabsTrigger
                     value="live"
                     className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-6 text-base font-medium whitespace-nowrap"
@@ -101,10 +105,6 @@ export function AnalyticsTabs({ children }: AnalyticsTabsProps) {
                   </TabsTrigger>
                 </TabsList>
               </div>
-              <TimeRangeSelect
-                value={timeRange}
-                onValueChange={(value) => dispatch(setTimeRange(value))}
-              />
             </div>
           </div>
           {children}
