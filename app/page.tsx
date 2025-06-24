@@ -155,7 +155,7 @@ export default function Home() {
         return <UserProfile/>;
 
       case "analytics":
-        return <LiveMetrics />;
+        return <OverviewMetrics />;
       case "analytics/overview":
         return <OverviewMetrics />;
       case "analytics/user":

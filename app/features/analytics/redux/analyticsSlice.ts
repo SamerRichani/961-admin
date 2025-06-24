@@ -21,7 +21,7 @@ const initialFilters: FilterState = {
 
 const initialState: AnalyticsState = {
   timeRange: "month",
-  activeTab: "live",
+  activeTab: "overview",
   search: "",
   sortField: "views",
   sortDirection: "desc",

@@ -8,6 +8,14 @@ import {
 import { setPage } from "@/components/sidebar/redux/navigationSlice";
 import { ReactNode } from "react";
 import AnalyticsChatbot from "./AnalyticsChatbot";
+import {
+  PieChart,
+  Users,
+  DollarSign,
+  Play,
+  Activity,
+  MessageCircle
+} from 'lucide-react';
 
 interface AnalyticsTabsProps {
   children: ReactNode;
@@ -20,26 +28,26 @@ export function AnalyticsTabs({ children }: AnalyticsTabsProps) {
   const handleTabChange = (value: string) => {
     dispatch(setActiveTab(value));
     switch (value) {
-      case "live":
-        dispatch(setPage("analytics"));
-        break;
       case "overview":
         dispatch(setPage("analytics/overview"));
         break;
-      case "user":
+      case "users":
         dispatch(setPage("analytics/user"));
         break;
       case "revenue":
         dispatch(setPage("analytics/revenue"));
         break;
-      case "apps":
+      case "sections":
         dispatch(setPage("analytics/apps"));
         break;
       case "content":
         dispatch(setPage("analytics/content"));
         break;
-      case "tabs":
+      case "pulse":
         dispatch(setPage("analytics/tabs"));
+        break;
+      case "chat":
+        dispatch(setPage("analytics"));
         break;
       default:
         dispatch(setPage("analytics"));
@@ -62,46 +70,46 @@ export function AnalyticsTabs({ children }: AnalyticsTabsProps) {
               <div className="overflow-x-auto scrollbar-hide w-full">
                 <TabsList className="w-full justify-start border-b rounded-none gap-2 min-w-max">
                   <TabsTrigger
-                    value="live"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-6 text-base font-medium whitespace-nowrap"
-                  >
-                    Live
-                  </TabsTrigger>
-                  <TabsTrigger
                     value="overview"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-6 text-base font-medium whitespace-nowrap"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-4 text-sm font-medium whitespace-nowrap flex items-center gap-2"
                   >
-                    Overview
+                    <PieChart className="h-4 w-4" /> Overview
                   </TabsTrigger>
                   <TabsTrigger
-                    value="user"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-6 text-base font-medium whitespace-nowrap"
+                    value="users"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-4 text-sm font-medium whitespace-nowrap flex items-center gap-2"
                   >
-                    User
+                    <Users className="h-4 w-4" /> Users
                   </TabsTrigger>
                   <TabsTrigger
                     value="revenue"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-6 text-base font-medium whitespace-nowrap"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-4 text-sm font-medium whitespace-nowrap flex items-center gap-2"
                   >
-                    Revenue
+                    <DollarSign className="h-4 w-4" /> Revenue
                   </TabsTrigger>
                   <TabsTrigger
-                    value="apps"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-6 text-base font-medium whitespace-nowrap"
+                    value="sections"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-4 text-sm font-medium whitespace-nowrap flex items-center gap-2"
                   >
-                    Apps
+                    <PieChart className="h-4 w-4" /> Sections
                   </TabsTrigger>
                   <TabsTrigger
                     value="content"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-6 text-base font-medium whitespace-nowrap"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-4 text-sm font-medium whitespace-nowrap flex items-center gap-2"
                   >
-                    Content
+                    <Play className="h-4 w-4" /> Content
                   </TabsTrigger>
                   <TabsTrigger
-                    value="tabs"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-6 text-base font-medium whitespace-nowrap"
+                    value="pulse"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-4 text-sm font-medium whitespace-nowrap flex items-center gap-2"
                   >
-                    Tabs
+                    <Activity className="h-4 w-4" /> Pulse
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="chat"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-4 text-sm font-medium whitespace-nowrap flex items-center gap-2"
+                  >
+                    <MessageCircle className="h-4 w-4" /> Chat
                   </TabsTrigger>
                 </TabsList>
               </div>
