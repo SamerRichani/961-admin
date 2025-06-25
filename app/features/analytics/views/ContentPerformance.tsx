@@ -282,322 +282,320 @@ function ContentPerformance() {
   };
 
   return (
-    <AnalyticsTabs>
-      <div className="space-y-6">
-        {/* Content Type Performance */}
-        <Card className="p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-lg font-semibold">Content Performance</h3>
-            <div className="text-sm text-gray-500">
-              Total Posts: {formatNumber(284500)}
-            </div>
-          </div>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={contentTypeData}
-                layout="vertical"
-                margin={{ top: 0, right: 30, bottom: 0, left: 80 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                <XAxis
-                  type="number"
-                  axisLine={true}
-                  tickLine={true}
-                  fontSize={12}
-                  tickFormatter={(value) => formatNumber(value)}
-                  domain={[0, 600000]}
-                  ticks={[0, 150000, 300000, 450000, 600000]}
-                />
-                <YAxis
-                  dataKey="type"
-                  type="category"
-                  axisLine={false}
-                  tickLine={false}
-                  width={80}
-                  tick={{ fontSize: 12 }}
-                />
-                <Tooltip
-                  formatter={(value: number) => [formatNumber(value), selectedMetric === "views" ? "Views" : "Revenue"]}
-                  contentStyle={{
-                    backgroundColor: 'white',
-                    border: '1px solid #e5e7eb',
-                    borderRadius: '6px',
-                    padding: '8px'
-                  }}
-                />
-                <Bar
-                  dataKey={selectedMetric}
-                  fill="#FF0000"
-                  radius={[0, 4, 4, 0]}
-                  barSize={20}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </Card>
-
-        {/* Header with back button when filtering */}
-        {(selectedCreator || selectedType) && (
-          <div className="mb-6">
-            <Button variant="ghost" onClick={handleBack} className="mb-2">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              Back to All Content
-            </Button>
-            <h2 className="text-xl font-semibold">
-              {selectedCreator && `Content by ${selectedCreator}`}
-              {selectedType &&
-                `${
-                  selectedType.charAt(0).toUpperCase() + selectedType.slice(1)
-                } Content`}
-            </h2>
-          </div>
-        )}
-
+    <div className="space-y-6">
+      {/* Content Type Performance */}
+      <Card className="p-6">
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-4">
-            <Input
-              placeholder="Search by title, creator, URL, or keywords..."
-              value={contentSearch}
-              onChange={(e) => dispatch(setContentSearch(e.target.value))}
-              className="w-80"
-            />
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filters
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuLabel>Content Type</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {["article", "video", "listicle", "quiz", "poll"].map(
-                  (type) => (
-                    <DropdownMenuCheckboxItem
-                      key={type}
-                      checked={contentFilters.postTypes.includes(
-                        type as PostType
-                      )}
-                      onCheckedChange={(checked: boolean) => {
-                        dispatch(
-                          setContentFilters({
-                            ...contentFilters,
-                            postTypes: checked
-                              ? [...contentFilters.postTypes, type as PostType]
-                              : contentFilters.postTypes.filter(
-                                  (t: PostType) => t !== type
-                                ),
-                          })
-                        );
-                      }}
-                    >
-                      {type.charAt(0).toUpperCase() + type.slice(1)}
-                    </DropdownMenuCheckboxItem>
-                  )
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <Button onClick={handleExport}>
-              <Download className="h-4 w-4 mr-2" />
-              Export
-            </Button>
+          <h3 className="text-lg font-semibold">Content Performance</h3>
+          <div className="text-sm text-gray-500">
+            Total Posts: {formatNumber(284500)}
           </div>
         </div>
-
-        <div className="rounded-md border">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Content</TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSort("publishedAt")}
-                  >
-                    <Calendar className="h-4 w-4" />
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSort("views")}
-                  >
-                    <Eye className="h-4 w-4" />
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSort("shares")}
-                  >
-                    <Send className="h-4 w-4" />
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSort("revenue")}
-                  >
-                    <DollarSign className="h-4 w-4" />
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSort("engagementRate")}
-                  >
-                    <Heart className="h-4 w-4" />
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSort("newUsers")}
-                  >
-                    <Users className="h-4 w-4" />
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSort("ctr")}
-                  >
-                    <MousePointerClick className="h-4 w-4" />
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSort("avgWatchTime")}
-                  >
-                    <Clock className="h-4 w-4" />
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </TableHead>
-                <TableHead>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => handleSort("completionRate")}
-                  >
-                    <CheckCircle className="h-4 w-4" />
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                  </Button>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredContent.slice(0, rowsPerPage).map((content) => (
-                <TableRow key={content.id}>
-                  <TableCell>
-                    <div className="flex items-start gap-3">
-                      <div className="mt-1">{getContentIcon(content.type)}</div>
-                      <div
-                        className="cursor-pointer"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          navigate.navigate(`/analytics/content/${content.id}`);
-                        }}
-                      >
-                        <a
-                          href={content.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-medium hover:text-[#FF0000] flex items-center gap-1"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {content.title}
-                          <ExternalLink className="h-3 w-3" />
-                        </a>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            dispatch(setSelectedCreator(content.creator));
-                          }}
-                          className="text-sm text-gray-500 hover:text-[#FF0000]"
-                        >
-                          {content.creator}
-                        </button>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {new Date(content.publishedAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>{formatMetric(content.views)}</TableCell>
-                  <TableCell>{formatMetric(content.shares)}</TableCell>
-                  <TableCell>{formatMetric(content.revenue, "$")}</TableCell>
-                  <TableCell>{content.engagementRate.toFixed(1)}%</TableCell>
-                  <TableCell>{formatMetric(content.newUsers)}</TableCell>
-                  <TableCell>{content.ctr.toFixed(1)}%</TableCell>
-                  <TableCell>{formatTime(content.avgWatchTime)}</TableCell>
-                  <TableCell>{content.completionRate.toFixed(1)}%</TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+        <div className="h-[300px]">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={contentTypeData}
+              layout="vertical"
+              margin={{ top: 0, right: 30, bottom: 0, left: 80 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" horizontal={false} />
+              <XAxis
+                type="number"
+                axisLine={true}
+                tickLine={true}
+                fontSize={12}
+                tickFormatter={(value) => formatNumber(value)}
+                domain={[0, 600000]}
+                ticks={[0, 150000, 300000, 450000, 600000]}
+              />
+              <YAxis
+                dataKey="type"
+                type="category"
+                axisLine={false}
+                tickLine={false}
+                width={80}
+                tick={{ fontSize: 12 }}
+              />
+              <Tooltip
+                formatter={(value: number) => [formatNumber(value), selectedMetric === "views" ? "Views" : "Revenue"]}
+                contentStyle={{
+                  backgroundColor: 'white',
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '6px',
+                  padding: '8px'
+                }}
+              />
+              <Bar
+                dataKey={selectedMetric}
+                fill="#FF0000"
+                radius={[0, 4, 4, 0]}
+                barSize={20}
+              />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
+      </Card>
 
-        {/* Pagination */}
-        <div className="flex items-center justify-between px-2 py-4">
-          <div className="flex items-center gap-2 text-sm text-gray-500">
-            <span>Rows per page:</span>
-            <select
-              value={rowsPerPage.toString()}
-              onChange={(e) =>
-                dispatch(
-                  setRowsPerPage(parseInt(e.target.value) as RowsPerPage)
+      {/* Header with back button when filtering */}
+      {(selectedCreator || selectedType) && (
+        <div className="mb-6">
+          <Button variant="ghost" onClick={handleBack} className="mb-2">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to All Content
+          </Button>
+          <h2 className="text-xl font-semibold">
+            {selectedCreator && `Content by ${selectedCreator}`}
+            {selectedType &&
+              `${
+                selectedType.charAt(0).toUpperCase() + selectedType.slice(1)
+              } Content`}
+          </h2>
+        </div>
+      )}
+
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <Input
+            placeholder="Search by title, creator, URL, or keywords..."
+            value={contentSearch}
+            onChange={(e) => dispatch(setContentSearch(e.target.value))}
+            className="w-80"
+          />
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                <Filter className="h-4 w-4 mr-2" />
+                Filters
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuLabel>Content Type</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              {["article", "video", "listicle", "quiz", "poll"].map(
+                (type) => (
+                  <DropdownMenuCheckboxItem
+                    key={type}
+                    checked={contentFilters.postTypes.includes(
+                      type as PostType
+                    )}
+                    onCheckedChange={(checked: boolean) => {
+                      dispatch(
+                        setContentFilters({
+                          ...contentFilters,
+                          postTypes: checked
+                            ? [...contentFilters.postTypes, type as PostType]
+                            : contentFilters.postTypes.filter(
+                                (t: PostType) => t !== type
+                              ),
+                        })
+                      );
+                    }}
+                  >
+                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                  </DropdownMenuCheckboxItem>
                 )
-              }
-              className="border rounded px-2 py-1"
-            >
-              <option value={25}>25</option>
-              <option value={50}>50</option>
-              <option value={100}>100</option>
-            </select>
-            <span className="ml-4">
-              Showing {Math.min(rowsPerPage, filteredContent.length)} of{" "}
-              {filteredContent.length} items
-            </span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={rowsPerPage >= filteredContent.length}
-              onClick={() => {
-                const newRowsPerPage = Math.min(
-                  rowsPerPage * 2,
-                  100
-                ) as RowsPerPage;
-                dispatch(setRowsPerPage(newRowsPerPage));
-              }}
-            >
-              Load More
-            </Button>
-          </div>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Button onClick={handleExport}>
+            <Download className="h-4 w-4 mr-2" />
+            Export
+          </Button>
         </div>
       </div>
-    </AnalyticsTabs>
+
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Content</TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort("publishedAt")}
+                >
+                  <Calendar className="h-4 w-4" />
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort("views")}
+                >
+                  <Eye className="h-4 w-4" />
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort("shares")}
+                >
+                  <Send className="h-4 w-4" />
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort("revenue")}
+                >
+                  <DollarSign className="h-4 w-4" />
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort("engagementRate")}
+                >
+                  <Heart className="h-4 w-4" />
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort("newUsers")}
+                >
+                  <Users className="h-4 w-4" />
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort("ctr")}
+                >
+                  <MousePointerClick className="h-4 w-4" />
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort("avgWatchTime")}
+                >
+                  <Clock className="h-4 w-4" />
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+              <TableHead>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort("completionRate")}
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+              </TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredContent.slice(0, rowsPerPage).map((content) => (
+              <TableRow key={content.id}>
+                <TableCell>
+                  <div className="flex items-start gap-3">
+                    <div className="mt-1">{getContentIcon(content.type)}</div>
+                    <div
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        navigate.navigate(`/analytics/content/${content.id}`);
+                      }}
+                    >
+                      <a
+                        href={content.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium hover:text-[#FF0000] flex items-center gap-1"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {content.title}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          dispatch(setSelectedCreator(content.creator));
+                        }}
+                        className="text-sm text-gray-500 hover:text-[#FF0000]"
+                      >
+                        {content.creator}
+                      </button>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  {new Date(content.publishedAt).toLocaleDateString()}
+                </TableCell>
+                <TableCell>{formatMetric(content.views)}</TableCell>
+                <TableCell>{formatMetric(content.shares)}</TableCell>
+                <TableCell>{formatMetric(content.revenue, "$")}</TableCell>
+                <TableCell>{content.engagementRate.toFixed(1)}%</TableCell>
+                <TableCell>{formatMetric(content.newUsers)}</TableCell>
+                <TableCell>{content.ctr.toFixed(1)}%</TableCell>
+                <TableCell>{formatTime(content.avgWatchTime)}</TableCell>
+                <TableCell>{content.completionRate.toFixed(1)}%</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex items-center justify-between px-2 py-4">
+        <div className="flex items-center gap-2 text-sm text-gray-500">
+          <span>Rows per page:</span>
+          <select
+            value={rowsPerPage.toString()}
+            onChange={(e) =>
+              dispatch(
+                setRowsPerPage(parseInt(e.target.value) as RowsPerPage)
+              )
+            }
+            className="border rounded px-2 py-1"
+          >
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
+          </select>
+          <span className="ml-4">
+            Showing {Math.min(rowsPerPage, filteredContent.length)} of{" "}
+            {filteredContent.length} items
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            disabled={rowsPerPage >= filteredContent.length}
+            onClick={() => {
+              const newRowsPerPage = Math.min(
+                rowsPerPage * 2,
+                100
+              ) as RowsPerPage;
+              dispatch(setRowsPerPage(newRowsPerPage));
+            }}
+          >
+            Load More
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 }
 

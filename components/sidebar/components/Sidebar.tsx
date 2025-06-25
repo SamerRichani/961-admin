@@ -29,104 +29,88 @@ import {
 } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import { UserProfile } from "./UserProfile";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useDispatch, useSelector } from "react-redux";
-import { setPage } from "@/components/sidebar/redux/navigationSlice";
-import { RootState } from "@/redux/store";
-import type { Page } from "@/components/sidebar/redux/navigationSlice";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const sidebarItems = [
-  { icon: BarChart3, label: "Dashboard", page: "dashboard" as Page },
-  { icon: LineChart, label: "Analytics", page: "analytics" as Page },
-  { icon: Rocket, label: "Investor", page: "investor" as Page },
+  { icon: BarChart3, label: "Dashboard", href: "/dashboard" },
+  { icon: LineChart, label: "Analytics", href: "/analytics" },
+  { icon: Rocket, label: "Investor", href: "/investor" },
   {
     icon: DollarSign,
     label: "Finance",
-    page: "finance" as Page,
+    href: "/finance/revenue",
     subItems: [
-      { icon: ShieldCheck, label: "Revenue", page: "finance/revenue" as Page },
-      {
-        icon: DollarSign,
-        label: "Receivables",
-        page: "finance/receivables" as Page,
-      },
-      { icon: HandCoins, label: "Payables", page: "finance/payables" as Page },
-      { icon: Wallet, label: "Wallets", page: "finance/wallets" as Page },
-      {
-        icon: ArrowLeftRight,
-        label: "Transactions",
-        page: "finance/transactions" as Page,
-      },
-      {
-        icon: ArrowLeftRight,
-        label: "VAT",
-        page: "finance/vat" as Page,
-      },
+      { icon: ShieldCheck, label: "Revenue", href: "/finance/revenue" },
+      { icon: DollarSign, label: "Receivables", href: "/finance/receivables" },
+      { icon: HandCoins, label: "Payables", href: "/finance/payables" },
+      { icon: Wallet, label: "Wallets", href: "/finance/wallets" },
+      { icon: ArrowLeftRight, label: "Transactions", href: "/finance/transactions" },
+      { icon: ArrowLeftRight, label: "VAT", href: "/finance/vat" },
     ],
   },
-  { icon: Users, label: "Users", page: "users" as Page },
+  { icon: Users, label: "Users", href: "/users" },
   {
     icon: Activity,
     label: "Pulse",
-    page: "pulse" as Page,
+    href: "/pulse/creators",
     subItems: [
-      { icon: Star, label: "Creators", page: "pulse/creators" as Page },
-      { icon: FileText, label: "Content", page: "pulse/content" as Page },
-      { icon: LayoutGrid, label: "Tabs", page: "pulse/tabs" as Page },
-      {
-        icon: MessageSquare,
-        label: "Engagement",
-        page: "pulse/engagement" as Page,
-      },
+      { icon: Star, label: "Creators", href: "/pulse/creators" },
+      { icon: FileText, label: "Content", href: "/pulse/content" },
+      { icon: LayoutGrid, label: "Tabs", href: "/pulse/tabs" },
+      { icon: MessageSquare, label: "Engagement", href: "/pulse/engagement" },
     ],
   },
   {
     icon: Apps,
     label: "Apps",
-    page: "apps" as Page,
+    href: "/apps/blood",
     subItems: [
-      { icon: HeartPulse, label: "Blood", page: "apps/blood" as Page },
-      { icon: CircleDollarSign, label: "Coins", page: "apps/coins" as Page },
-      { icon: Coins, label: "Points", page: "apps/points" as Page },
-      { icon: TicketCheck, label: "Events", page: "apps/events" as Page },
+      { icon: HeartPulse, label: "Blood", href: "/apps/blood" },
+      { icon: CircleDollarSign, label: "Coins", href: "/apps/coins" },
+      { icon: Coins, label: "Points", href: "/apps/points" },
+      { icon: TicketCheck, label: "Events", href: "/apps/events" },
     ],
   },
-  { icon: Truck, label: "Flex", page: "flex" as Page },
-  { icon: Box, label: "Moderation", page: "moderation" as Page },
+  { icon: Truck, label: "Flex", href: "/flex" },
+  { icon: Box, label: "Moderation", href: "/moderation" },
   {
     icon: HeadphonesIcon,
     label: "Support",
-    page: "support" as Page,
+    href: "/support",
   },
   { icon: ScrollText, label: "Logs" },
 ];
 
-export function Sidebar() {
-  const dispatch = useDispatch();
-  const currentPage = useSelector(
-    (state: RootState) => state.navigation.currentPage
-  );
+interface SidebarProps {
+  onNavClick?: () => void;
+}
+
+export function Sidebar({ onNavClick }: SidebarProps) {
   const [expandedItem, setExpandedItem] = useState<string | null>(null);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const pathname = usePathname();
 
-
-  const handleNavigation = (page: Page) => {
-    dispatch(setPage(page));
-    setIsMobileOpen(false);
+  const handleItemClick = (item: typeof sidebarItems[0]) => {
+    if (item.subItems) {
+      setExpandedItem(expandedItem === item.label ? null : item.label);
+    } else {
+      setExpandedItem(null);
+      setIsMobileOpen(false);
+      if (onNavClick) onNavClick();
+    }
   };
 
-  const handleItemClick = (page: string) => {
-    const item = sidebarItems.find(
-      (item) => item.label.toLowerCase() === page.toLowerCase()
-    );
-    if (item?.subItems) {
-      setExpandedItem(expandedItem === page ? null : page);
-    } else if (item?.page) {
-      setExpandedItem(null);
-      handleNavigation(item.page);
+  const isActive = (href?: string, subItems?: any[]) => {
+    if (!href) return false;
+    if (pathname === href) return true;
+    if (subItems) {
+      return subItems.some((sub: any) => pathname === sub.href);
     }
+    return false;
   };
 
   return (
@@ -176,12 +160,16 @@ export function Sidebar() {
               icon={item.icon}
               label={item.label}
               expanded={expandedItem === item.label}
-              active={currentPage === item.page}
-              onClick={() => handleItemClick(item.label)}
+              href={item.subItems ? undefined : item.href}
+              active={isActive(item.href, item.subItems)}
+              onClick={() => handleItemClick(item)}
               subItems={item.subItems?.map((subItem) => ({
                 ...subItem,
-                active: currentPage === subItem.page,
-                onClick: () => subItem.page && handleNavigation(subItem.page),
+                active: pathname === subItem.href,
+                onClick: () => {
+                  setIsMobileOpen(false);
+                  if (onNavClick) onNavClick();
+                },
               }))}
             />
           ))}

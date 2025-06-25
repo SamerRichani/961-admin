@@ -1,3 +1,5 @@
+"use client"
+
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { TimeRangeSelect } from "./TimeRangeSelect";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -5,7 +7,6 @@ import {
   setActiveTab,
   setTimeRange,
 } from "@/app/features/analytics/redux/analyticsSlice";
-import { setPage } from "@/components/sidebar/redux/navigationSlice";
 import { ReactNode } from "react";
 import AnalyticsChatbot from "./AnalyticsChatbot";
 import {
@@ -27,31 +28,6 @@ export function AnalyticsTabs({ children }: AnalyticsTabsProps) {
 
   const handleTabChange = (value: string) => {
     dispatch(setActiveTab(value));
-    switch (value) {
-      case "overview":
-        dispatch(setPage("analytics/overview"));
-        break;
-      case "users":
-        dispatch(setPage("analytics/user"));
-        break;
-      case "revenue":
-        dispatch(setPage("analytics/revenue"));
-        break;
-      case "sections":
-        dispatch(setPage("analytics/apps"));
-        break;
-      case "content":
-        dispatch(setPage("analytics/content"));
-        break;
-      case "pulse":
-        dispatch(setPage("analytics/tabs"));
-        break;
-      case "chat":
-        dispatch(setPage("analytics"));
-        break;
-      default:
-        dispatch(setPage("analytics"));
-    }
   };
 
   return (

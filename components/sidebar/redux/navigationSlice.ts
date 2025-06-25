@@ -1,3 +1,5 @@
+// Deprecated: Navigation slice is no longer used. Navigation is now handled by Next.js routing.
+
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export type Page = 

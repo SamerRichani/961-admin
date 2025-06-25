@@ -1,60 +1,35 @@
+"use client"
+
 import { Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAppDispatch, useAppSelector } from '@/redux/hooks';
 import { TransactionFilters } from '@/app/features/finance/components/TransactionsPage/TransactionFilters';
 import { TransactionTable } from '@/app/features/finance/components/TransactionsPage/TransactionTable';
-import { useMemo, useEffect } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { setTransactions } from '@/app/features/finance/redux/transactionsSlice';
 import { useToast } from '@/hooks/use-toast';
+import { RootState } from '@/redux/store';
 
 export function TransactionsPage() {
   const { toast } = useToast();
   const dispatch = useAppDispatch();
-  const { transactions, search, selectedTypes, dateRange } = useAppSelector((state) => state.transactions);
+  const { transactions, search, selectedTypes, dateRange } = useAppSelector((state: RootState) => state.transactions);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/finance/transactions`);
-        const data = await response.json();
-        
-        if (Array.isArray(data)) {
-          const transformedTransactions = data.map((item: any) => ({
-            id: item._id,
-            type: item.type,
-            amount: Number(item.amount) || 0,
-            date: item.date,
-            description: item.description,
-            reference: item.reference,
-            status: item.status,
-            sourceWallet: item.sourceWallet ? {
-              id: item.sourceWallet._id,
-              entityName: item.sourceWallet.entityName,
-              balance: Number(item.sourceWallet.balance) || 0
-            } : undefined,
-            destinationWallet: item.destinationWallet ? {
-              id: item.destinationWallet._id,
-              entityName: item.destinationWallet.entityName,
-              balance: Number(item.destinationWallet.balance) || 0
-            } : undefined,
-            metadata: item.metadata || {}
-          }));
-          
-          dispatch(setTransactions(transformedTransactions));
-        }
-      } catch (error) {
-        console.error('Error fetching transactions:', error);
-        toast({
-          title: "Error",
-          description: "Failed to fetch transactions",
-          variant: "destructive",
-          duration: 3000,
-        });
-      }
-    };
-
-    fetchTransactions();
-  }, [dispatch, toast]);
+    setIsLoading(true);
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/finance/transactions`)
+      .then(res => res.json())
+      .then(data => {
+        dispatch(setTransactions(data));
+        setError(null);
+      })
+      .catch((err) => {
+        setError(err instanceof Error ? err.message : 'Error fetching transactions');
+      })
+      .finally(() => setIsLoading(false));
+  }, [dispatch]);
 
   const filteredTransactions = useMemo(() => 
     transactions.filter(transaction => {
@@ -182,7 +157,11 @@ export function TransactionsPage() {
           </div>
 
           <div className="overflow-x-auto">
-            <TransactionTable transactions={filteredTransactions} />
+            {isLoading && <div className="flex items-center justify-center py-8"><div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#FF0000]"></div><span className="ml-4 text-[#FF0000] text-lg font-semibold">Loading...</span></div>}
+            {error && <div className="text-red-500">{error}</div>}
+            {!isLoading && !error && (
+              <TransactionTable transactions={filteredTransactions} />
+            )}
           </div>
         </div>
       </div>

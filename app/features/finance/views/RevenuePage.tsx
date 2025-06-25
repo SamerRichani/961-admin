@@ -21,83 +21,37 @@ import {
   setTopAdvertisers,
   setError,
 } from '@/app/features/finance/redux/topPerformersSlice';
+import { RootState } from '@/redux/store';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export function RevenuePage() {
   const dispatch = useAppDispatch();
   const timeRange = useAppSelector((state) => state.finance.timeRange);
-  const { topCreators, topLocations, topAdvertisers, error } = useAppSelector(
-    (state) => state.topPerformers
-  );
-  const [isLoading, setIsLoading] = useState(false);
+  const { topCreators, topLocations, topAdvertisers, error } = useAppSelector((state: RootState) => state.topPerformers);
+  const [isLoading, setIsLoading] = useState(true);
   const isFetching = useRef(false);
 
   console.log('RevenuePage render - timeRange:', timeRange, 'isLoading:', isLoading);
 
   useEffect(() => {
-    console.log('useEffect triggered - timeRange:', timeRange);
-    const controller = new AbortController();
-    const signal = controller.signal;
-
-    const fetchAllData = async () => {
-      if (isFetching.current) {
-        console.log('Already fetching, skipping');
-        return;
-      }
-      
-      console.log('Starting fetchAll');
-      isFetching.current = true;
-      setIsLoading(true);
-
-      try {
-        const [creatorsResponse, locationsResponse, advertisersResponse] = await Promise.all([
-          fetch(`${API_BASE_URL}/finance/revenue/top/creators`, { signal }),
-          fetch(`${API_BASE_URL}/finance/revenue/top/locations`, { signal }),
-          fetch(`${API_BASE_URL}/finance/revenue/top/advertisers`, { signal })
-        ]);
-
-        const [creatorsData, locationsData, advertisersData] = await Promise.all([
-          creatorsResponse.json(),
-          locationsResponse.json(),
-          advertisersResponse.json()
-        ]);
-
-        if (!signal.aborted) {
-          // Dispatch all data at once
-          dispatch(setTopCreators(creatorsData));
-          dispatch(setTopLocations(locationsData));
-          dispatch(setTopAdvertisers(advertisersData));
-        }
-      } catch (err) {
-        // Don't show error if the request was aborted
-        if (err instanceof Error && err.name === 'AbortError') {
-          console.log('Request was aborted');
-          return;
-        }
-        console.error('Error fetching data:', err);
-        if (!signal.aborted) {
-          dispatch(setError(err instanceof Error ? err.message : 'Error fetching data'));
-        }
-      } finally {
-        if (!signal.aborted) {
-          console.log('FetchAll completed');
-          isFetching.current = false;
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchAllData();
-
-    return () => {
-      console.log('Cleaning up effect');
-      if (isFetching.current) {
-        controller.abort();
-        isFetching.current = false;
-      }
-    };
-  }, [timeRange, dispatch]);
+    setIsLoading(true);
+    Promise.all([
+      fetch(`${API_BASE_URL}/finance/revenue/top/creators`).then(res => res.json()),
+      fetch(`${API_BASE_URL}/finance/revenue/top/locations`).then(res => res.json()),
+      fetch(`${API_BASE_URL}/finance/revenue/top/advertisers`).then(res => res.json()),
+    ])
+      .then(([creators, locations, advertisers]) => {
+        dispatch(setTopCreators(creators));
+        dispatch(setTopLocations(locations));
+        dispatch(setTopAdvertisers(advertisers));
+        dispatch(setError(null));
+      })
+      .catch((err) => {
+        dispatch(setError(err instanceof Error ? err.message : 'Error fetching data'));
+      })
+      .finally(() => setIsLoading(false));
+  }, [dispatch]);
 
   console.log('Current state:', { topCreators, topLocations, topAdvertisers });
 

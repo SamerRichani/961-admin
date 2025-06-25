@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect } from 'react';
 import { Download } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
