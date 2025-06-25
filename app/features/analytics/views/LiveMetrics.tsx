@@ -1,317 +1,416 @@
 "use client";
 
-import { useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { formatNumber, formatMoney } from "@/lib/format";
-import {
-  Users,
-  Globe,
-  DollarSign,
-  Play,
-  FileText,
-  Radio,
-  ArrowUpRight,
-  ArrowDownRight,
-} from "lucide-react";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
-  Legend,
-} from "recharts";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { updateLiveMetrics } from "@/app/features/analytics/redux/analyticsSlice";
-import { AnalyticsTabs } from "@/app/features/analytics/components/AnalyticsTabs";
+import React, { useState } from 'react';
+import { Search, ChevronUp, ChevronDown, Eye, Users, DollarSign, TrendingUp, Coins, Zap, ShoppingCart } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
 
-const COLORS = ["#FF0000", "#FF3333", "#FF6666", "#FF9999", "#FFCCCC"];
+// Helpers
+function getAdjustedValue(baseValue: number, period: string) {
+  switch (period) {
+    case 'today':
+    case 'day':
+      return baseValue;
+    case '7days':
+    case 'week':
+      return Math.round(baseValue * 1.1);
+    case '30days':
+    case 'month':
+      return Math.round(baseValue * 1.2);
+    default:
+      return Math.round(baseValue * 1.3);
+  }
+}
+function getAdjustedPercentage(basePercentage: string, period: string) {
+  let base = parseFloat(basePercentage);
+  let adjusted = base;
+  switch (period) {
+    case 'today':
+    case 'day':
+      adjusted = base;
+      break;
+    case '7days':
+    case 'week':
+      adjusted = base * 1.1;
+      break;
+    case '30days':
+    case 'month':
+      adjusted = base * 1.2;
+      break;
+    default:
+      adjusted = base * 1.3;
+  }
+  return (adjusted > 0 ? '+' : '') + adjusted.toFixed(1) + '%';
+}
 
 export function LiveMetrics() {
-  const dispatch = useAppDispatch();
-  const liveMetrics = useAppSelector((state) => state.analytics.liveMetrics);
+  // Simulate timePeriod from Redux
+  const timePeriod = '7days'; // Replace with Redux if needed
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortField, setSortField] = useState<'tab' | 'views' | 'users' | 'engagement' | 'revenue'>('views');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
 
-  useEffect(() => {
-    // Simulate real-time data updates
-    const interval = setInterval(() => {
-      const mockData = {
-        activeUsers: Math.floor(Math.random() * 50000) + 10000,
-        webSessions: Math.floor(Math.random() * 20000) + 5000,
-        mobileSessions: Math.floor(Math.random() * 30000) + 8000,
-        revenueToday: Math.floor(Math.random() * 50000) + 10000,
-        adRevenue: Math.floor(Math.random() * 20000) + 5000,
-        coinRevenue: Math.floor(Math.random() * 15000) + 3000,
-        commerceRevenue: Math.floor(Math.random() * 10000) + 2000,
-        subscriptionRevenue: Math.floor(Math.random() * 5000) + 1000,
-        installations: Math.floor(Math.random() * 1000) + 200,
-        uninstalls: Math.floor(Math.random() * 100) + 20,
-        topContent: [
-          {
-            title: "Live Stream: Breaking News",
-            views: Math.floor(Math.random() * 50000) + 10000,
-            type: "stream" as const,
-          },
-          {
-            title: "Viral Video: Street Food Tour",
-            views: Math.floor(Math.random() * 30000) + 8000,
-            type: "video" as const,
-          },
-          {
-            title: "Trending Article: Tech News",
-            views: Math.floor(Math.random() * 20000) + 5000,
-            type: "article" as const,
-          },
-        ],
-        activeByCountry: [
-          {
-            country: "Lebanon",
-            users: Math.floor(Math.random() * 20000) + 5000,
-          },
-          { country: "UAE", users: Math.floor(Math.random() * 15000) + 3000 },
-          { country: "KSA", users: Math.floor(Math.random() * 10000) + 2000 },
-          { country: "Qatar", users: Math.floor(Math.random() * 5000) + 1000 },
-          { country: "Other", users: Math.floor(Math.random() * 3000) + 500 },
-        ],
-      };
-      dispatch(updateLiveMetrics(mockData));
-    }, 5000); // Update every 5 seconds
+  const getEngagement = (baseEngagement: number, period: string) => {
+    return (baseEngagement * (period === 'today' ? 1 : period === '7days' ? 1.1 : 1.2)).toFixed(1);
+  };
 
-    return () => clearInterval(interval);
-  }, [dispatch]);
+  const pulseTabs = [
+    { tab: 'Following', views: 2450000, users: 89200, engagement: 12.4, revenue: 15600 },
+    { tab: 'For You', views: 5680000, users: 156800, engagement: 18.7, revenue: 28900 },
+    { tab: 'Events', views: 890000, users: 34500, engagement: 22.1, revenue: 12400 },
+    { tab: 'Food', views: 1230000, users: 67800, engagement: 15.3, revenue: 18700 },
+    { tab: 'Sports', views: 1890000, users: 78900, engagement: 16.8, revenue: 22300 },
+    { tab: 'Entertainment', views: 3240000, users: 124500, engagement: 19.2, revenue: 31200 },
+    { tab: 'News', views: 4560000, users: 189300, engagement: 14.7, revenue: 38900 },
+    { tab: 'Technology', views: 1560000, users: 67200, engagement: 21.3, revenue: 19800 },
+    { tab: 'Travel', views: 2340000, users: 89700, engagement: 17.9, revenue: 24600 },
+    { tab: 'Fashion', views: 1780000, users: 78400, engagement: 20.1, revenue: 21500 }
+  ];
 
-  const getContentIcon = (type: "video" | "article" | "stream") => {
-    switch (type) {
-      case "video":
-        return <Play className="h-4 w-4 text-blue-500" />;
-      case "article":
-        return <FileText className="h-4 w-4 text-green-500" />;
-      case "stream":
-        return <Radio className="h-4 w-4 text-purple-500" />;
+  const handleSort = (field: typeof sortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('desc');
     }
   };
 
+  const filteredAndSortedTabs = pulseTabs
+    .filter(tab => 
+      tab.tab.toLowerCase().includes(searchTerm.toLowerCase())
+    )
+    .sort((a, b) => {
+      let aValue: number | string;
+      let bValue: number | string;
+
+      switch (sortField) {
+        case 'tab':
+          aValue = a.tab;
+          bValue = b.tab;
+          break;
+        case 'views':
+          aValue = getAdjustedValue(a.views, timePeriod);
+          bValue = getAdjustedValue(b.views, timePeriod);
+          break;
+        case 'users':
+          aValue = getAdjustedValue(a.users, timePeriod);
+          bValue = getAdjustedValue(b.users, timePeriod);
+          break;
+        case 'engagement':
+          aValue = parseFloat(getEngagement(a.engagement, timePeriod));
+          bValue = parseFloat(getEngagement(b.engagement, timePeriod));
+          break;
+        case 'revenue':
+          aValue = getAdjustedValue(a.revenue, timePeriod);
+          bValue = getAdjustedValue(b.revenue, timePeriod);
+          break;
+        default:
+          return 0;
+      }
+
+      if (typeof aValue === 'string' && typeof bValue === 'string') {
+        return sortDirection === 'asc' 
+          ? aValue.localeCompare(bValue)
+          : bValue.localeCompare(aValue);
+      }
+
+      return sortDirection === 'asc' 
+        ? (aValue as number) - (bValue as number) 
+        : (bValue as number) - (aValue as number);
+    });
+
+  const SortIcon = ({ field }: { field: typeof sortField }) => {
+    if (sortField !== field) {
+      return <div className="w-4 h-4" />;
+    }
+    return sortDirection === 'asc' ? 
+      <ChevronUp className="w-4 h-4" /> : 
+      <ChevronDown className="w-4 h-4" />;
+  };
+
   return (
-    <AnalyticsTabs>
-      <div className="space-y-4 sm:space-y-6">
-        {/* Key Metrics */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-          <Card className="p-4 sm:p-6">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-red-100 flex items-center justify-center">
-                <Users className="h-5 w-5 sm:h-6 sm:w-6 text-red-600" />
+    <div className="space-y-6">
+      {/* Revenue Metrics */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Placeholder for CompactMetricCard, implement as needed */}
+      </div>
+        
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Revenue Breakdown Card */}
+        <Card className="hover:shadow-md transition-shadow duration-200">
+          <CardContent className="p-6">
+            <div className="mb-4">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Revenue Breakdown</h3>
+              <p className="text-3xl font-bold text-gray-900">
+                ${(getAdjustedValue(200000, timePeriod) / 1000).toFixed(1)}K
+              </p>
+              <p className="text-sm text-green-600 font-medium">
+                {getAdjustedPercentage('+18.5%', timePeriod)} from previous period
+              </p>
+            </div>
+            
+            <div className="space-y-4">
+              <div className="flex items-center justify-between p-3 bg-orange-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <Zap className="w-5 h-5 text-orange-600" />
+                  <span className="font-medium text-gray-900">Ads</span>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold text-gray-900">
+                    ${(getAdjustedValue(67400, timePeriod) / 1000).toFixed(1)}K
+                  </p>
+                  <p className="text-sm text-green-600">{getAdjustedPercentage('+15.2%', timePeriod)}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-sm text-gray-500">Active Users</p>
-                <p className="text-xl sm:text-2xl font-bold">
-                  {formatNumber(liveMetrics.activeUsers)}
-                </p>
+              
+              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <Coins className="w-5 h-5 text-blue-600" />
+                  <span className="font-medium text-gray-900">Coin Purchases</span>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold text-gray-900">
+                    ${(getAdjustedValue(98200, timePeriod) / 1000).toFixed(1)}K
+                  </p>
+                  <p className="text-sm text-green-600">{getAdjustedPercentage('+28.7%', timePeriod)}</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                <div className="flex items-center space-x-3">
+                  <ShoppingCart className="w-5 h-5 text-green-600" />
+                  <span className="font-medium text-gray-900">Commerce</span>
+                </div>
+                <div className="text-right">
+                  <p className="font-semibold text-gray-900">
+                    ${(getAdjustedValue(34400, timePeriod) / 1000).toFixed(1)}K
+                  </p>
+                  <p className="text-sm text-green-600">{getAdjustedPercentage('+22.1%', timePeriod)}</p>
+                </div>
               </div>
             </div>
-          </Card>
-
-          <Card className="p-4 sm:p-6">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-blue-100 flex items-center justify-center">
-                <Globe className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Web Sessions</p>
-                <p className="text-xl sm:text-2xl font-bold">
-                  {formatNumber(liveMetrics.webSessions)}
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-4 sm:p-6">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-green-100 flex items-center justify-center">
-                <DollarSign className="h-5 w-5 sm:h-6 sm:w-6 text-green-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Revenue Today</p>
-                <p className="text-xl sm:text-2xl font-bold">
-                  {formatMoney(liveMetrics.revenueToday)}
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-4 sm:p-6">
-            <div className="flex items-center gap-3 sm:gap-4">
-              <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-purple-100 flex items-center justify-center">
-                <Users className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Mobile Sessions</p>
-                <p className="text-xl sm:text-2xl font-bold">
-                  {formatNumber(liveMetrics.mobileSessions)}
-                </p>
-              </div>
-            </div>
-          </Card>
-        </div>
-
-        {/* Revenue Breakdown */}
-        <Card className="p-4 sm:p-6">
-          <h2 className="text-lg font-semibold mb-4 sm:mb-6">
-            Revenue Breakdown
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
-            <div>
-              <div className="text-sm text-gray-500">Ad Revenue</div>
-              <div className="text-xl sm:text-2xl font-bold">
-                {formatMoney(liveMetrics.adRevenue)}
-              </div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-500">Coin Revenue</div>
-              <div className="text-xl sm:text-2xl font-bold">
-                {formatMoney(liveMetrics.coinRevenue)}
-              </div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-500">Commerce</div>
-              <div className="text-xl sm:text-2xl font-bold">
-                {formatMoney(liveMetrics.commerceRevenue)}
-              </div>
-            </div>
-            <div>
-              <div className="text-sm text-gray-500">Subscriptions</div>
-              <div className="text-xl sm:text-2xl font-bold">
-                {formatMoney(liveMetrics.subscriptionRevenue)}
-              </div>
-            </div>
-          </div>
+          </CardContent>
         </Card>
 
-        {/* App Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          <Card className="p-4 sm:p-6">
-            <h2 className="text-lg font-semibold mb-4 sm:mb-6">
-              App Statistics
-            </h2>
-            <div className="grid grid-cols-2 gap-4 sm:gap-6">
-              <div>
-                <div className="text-sm text-gray-500">Installations</div>
-                <div className="text-xl sm:text-2xl font-bold text-emerald-600 flex items-center gap-1">
-                  <ArrowUpRight className="h-4 w-4" />
-                  {formatNumber(liveMetrics.installations)}
-                </div>
-              </div>
-              <div>
-                <div className="text-sm text-gray-500">Uninstalls</div>
-                <div className="text-xl sm:text-2xl font-bold text-red-600 flex items-center gap-1">
-                  <ArrowDownRight className="h-4 w-4" />
-                  {formatNumber(liveMetrics.uninstalls)}
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="p-4 sm:p-6">
-            <h2 className="text-lg font-semibold mb-4 sm:mb-6">
-              Top Performing Content
-            </h2>
-            <div className="space-y-3 sm:space-y-4">
-              {liveMetrics.topContent.map((content, index) => (
-                <div key={index} className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {getContentIcon(content.type)}
-                    <span className="font-medium text-sm sm:text-base">
-                      {content.title}
-                    </span>
+        {/* Revenue Distribution Chart */}
+        <Card className="hover:shadow-md transition-shadow duration-200">
+          <CardContent className="p-6">
+            <h3 className="text-lg font-semibold text-gray-900 mb-6">Revenue Distribution</h3>
+            
+            <div className="space-y-6">
+              {/* Donut Chart Representation */}
+              <div className="relative w-48 h-48 mx-auto">
+                <svg className="w-48 h-48 transform -rotate-90" viewBox="0 0 100 100">
+                  {/* Background circle */}
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="none"
+                    stroke="#f3f4f6"
+                    strokeWidth="8"
+                  />
+                  
+                  {/* Coin Purchases - 49.1% */}
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="none"
+                    stroke="#3b82f6"
+                    strokeWidth="8"
+                    strokeDasharray="122.5 128.5"
+                    strokeDashoffset="0"
+                    className="transition-all duration-500"
+                  />
+                  
+                  {/* Ads - 33.7% */}
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="none"
+                    stroke="#f97316"
+                    strokeWidth="8"
+                    strokeDasharray="84.4 166.6"
+                    strokeDashoffset="-122.5"
+                    className="transition-all duration-500"
+                  />
+                  
+                  {/* Commerce - 17.2% */}
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    fill="none"
+                    stroke="#10b981"
+                    strokeWidth="8"
+                    strokeDasharray="43.1 207.9"
+                    strokeDashoffset="-206.9"
+                    className="transition-all duration-500"
+                  />
+                </svg>
+                
+                {/* Center text */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-gray-900">
+                      ${(getAdjustedValue(200000, timePeriod) / 1000).toFixed(0)}K
+                    </p>
+                    <p className="text-sm text-gray-500">Total</p>
                   </div>
-                  <span className="text-sm text-gray-500">
-                    {formatNumber(content.views)} views
-                  </span>
                 </div>
-              ))}
+              </div>
+              
+              {/* Legend */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                    <span className="text-sm text-gray-700">Coin Purchases</span>
+                  </div>
+                  <span className="text-sm font-medium text-gray-900">49.1%</span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-3 h-3 bg-orange-500 rounded-full"></div>
+                    <span className="text-sm text-gray-700">Ads</span>
+                  </div>
+                  <span className="text-sm font-medium text-gray-900">33.7%</span>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                    <span className="text-sm text-gray-700">Commerce</span>
+                  </div>
+                  <span className="text-sm font-medium text-gray-900">17.2%</span>
+                </div>
+              </div>
             </div>
-          </Card>
-        </div>
-
-        {/* Geographic Distribution */}
-        <Card className="p-4 sm:p-6">
-          <h2 className="text-lg font-semibold mb-4 sm:mb-6">
-            Active Users by Country
-          </h2>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-            <div className="h-[250px] sm:h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={liveMetrics.activeByCountry}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="country" />
-                  <YAxis />
-                  <Tooltip
-                    formatter={(value) => formatNumber(value as number)}
-                  />
-                  <Bar
-                    dataKey="users"
-                    fill="#FF0000"
-                    radius={[4, 4, 0, 0]}
-                    barSize={60}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-            <div className="h-[250px] sm:h-[300px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={liveMetrics.activeByCountry}
-                    cx="50%"
-                    cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
-                    paddingAngle={5}
-                    dataKey="users"
-                    nameKey="country"
-                    stroke="none"
-                    label={(entry) => entry.country}
-                  >
-                    {liveMetrics.activeByCountry.map((entry, index) => (
-                      <Cell
-                        key={entry.country}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip
-                    formatter={(value, name, props) => [
-                      formatNumber(value as number),
-                      props.payload.country
-                    ]}
-                    contentStyle={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                      border: 'none',
-                      borderRadius: '8px',
-                      boxShadow: '0 2px 10px rgba(0,0,0,0.1)'
-                    }}
-                  />
-                  <Legend 
-                    formatter={(value, entry) => {
-                      if (entry && entry.payload) {
-                        return (entry.payload as any).country || value;
-                      }
-                      return value;
-                    }}
-                    verticalAlign="middle" 
-                    align="right"
-                    layout="vertical"
-                    iconType="circle"
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
+          </CardContent>
         </Card>
       </div>
-    </AnalyticsTabs>
+
+      {/* Pulse Tabs Table */}
+      <Card>
+        <CardContent className="p-6">
+          {/* Search Bar */}
+          <div className="mb-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                placeholder="Search pulse tabs..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+          </div>
+
+          {/* Table */}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th 
+                    className="text-left py-3 px-4 font-semibold text-gray-700 cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => handleSort('tab')}
+                  >
+                    <div className="flex items-center space-x-2">
+                      <span>Tab</span>
+                      <SortIcon field="tab" />
+                    </div>
+                  </th>
+                  <th 
+                    className="text-right py-3 px-4 font-semibold text-gray-700 cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => handleSort('views')}
+                  >
+                    <div className="flex items-center justify-end space-x-2">
+                      <Eye className="w-4 h-4" />
+                      <span>Views</span>
+                      <SortIcon field="views" />
+                    </div>
+                  </th>
+                  <th 
+                    className="text-right py-3 px-4 font-semibold text-gray-700 cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => handleSort('users')}
+                  >
+                    <div className="flex items-center justify-end space-x-2">
+                      <Users className="w-4 h-4" />
+                      <span>Users</span>
+                      <SortIcon field="users" />
+                    </div>
+                  </th>
+                  <th 
+                    className="text-right py-3 px-4 font-semibold text-gray-700 cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => handleSort('engagement')}
+                  >
+                    <div className="flex items-center justify-end space-x-2">
+                      <TrendingUp className="w-4 h-4" />
+                      <span>Engagement</span>
+                      <SortIcon field="engagement" />
+                    </div>
+                  </th>
+                  <th 
+                    className="text-right py-3 px-4 font-semibold text-gray-700 cursor-pointer hover:bg-gray-50 transition-colors"
+                    onClick={() => handleSort('revenue')}
+                  >
+                    <div className="flex items-center justify-end space-x-2">
+                      <DollarSign className="w-4 h-4" />
+                      <span>Revenue</span>
+                      <SortIcon field="revenue" />
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredAndSortedTabs.map((tab, index) => (
+                  <tr 
+                    key={tab.tab} 
+                    className={`border-b border-gray-100 hover:bg-gray-50 transition-colors ${
+                      index % 2 === 0 ? 'bg-white' : 'bg-gray-50/50'
+                    }`}
+                  >
+                    <td className="py-4 px-4">
+                      <span className="font-medium text-gray-900">{tab.tab}</span>
+                    </td>
+                    <td className="py-4 px-4 text-right">
+                      <span className="font-normal text-gray-900">
+                        {(getAdjustedValue(tab.views, timePeriod) / 1000000).toFixed(1)}M
+                      </span>
+                    </td>
+                    <td className="py-4 px-4 text-right">
+                      <span className="font-normal text-gray-900">
+                        {(getAdjustedValue(tab.users, timePeriod) / 1000).toFixed(1)}K
+                      </span>
+                    </td>
+                    <td className="py-4 px-4 text-right">
+                      <span className="font-normal text-gray-900">
+                        {getEngagement(tab.engagement, timePeriod)}%
+                      </span>
+                    </td>
+                    <td className="py-4 px-4 text-right">
+                      <span className="font-normal text-gray-900">
+                        ${(getAdjustedValue(tab.revenue, timePeriod) / 1000).toFixed(1)}K
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* No results message */}
+          {filteredAndSortedTabs.length === 0 && searchTerm && (
+            <div className="text-center py-8">
+              <p className="text-gray-500">No pulse tabs found matching "{searchTerm}".</p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
   );
 }

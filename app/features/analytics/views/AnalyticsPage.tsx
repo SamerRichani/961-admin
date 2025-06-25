@@ -5,12 +5,13 @@ import { OverviewMetrics } from './OverviewMetrics';
 import { UserDemographicsAndBehavior } from './UserDemographicsAndBehavior';
 import { RevenueAnalytics } from './RevenueAnalytics';
 import { TabsAnalytics } from './TabsAnalytics';
-import { ContentPerformance } from './ContentPerformance';
+import ContentPerformance from './ContentPerformance';
 import { LiveMetrics } from './LiveMetrics';
 import React from 'react';
+import ChatTab from './ChatTab';
 
 export function AnalyticsPage() {
-  const { activeTab } = useAppSelector((state) => state.analytics);
+  const { activeTab, timeRange } = useAppSelector((state) => state.analytics);
 
   let content: React.ReactNode;
   switch (activeTab) {
@@ -33,7 +34,45 @@ export function AnalyticsPage() {
       content = <LiveMetrics />;
       break;
     case 'chat':
-      content = <div className="p-8">Chat analytics coming soon.</div>;
+      content = <ChatTab 
+        timePeriod={timeRange === 'day' ? 'today' : timeRange === 'week' ? '7days' : timeRange === 'month' ? '30days' : timeRange}
+        getAdjustedValue={(baseValue, period) => {
+          switch (period) {
+            case 'today':
+            case 'day':
+              return baseValue;
+            case '7days':
+            case 'week':
+              return Math.round(baseValue * 1.1);
+            case '30days':
+            case 'month':
+              return Math.round(baseValue * 1.2);
+            default:
+              return Math.round(baseValue * 1.3);
+          }
+        }}
+        getAdjustedPercentage={(basePercentage, period) => {
+          let base = parseFloat(basePercentage);
+          let adjusted = base;
+          switch (period) {
+            case 'today':
+            case 'day':
+              adjusted = base;
+              break;
+            case '7days':
+            case 'week':
+              adjusted = base * 1.1;
+              break;
+            case '30days':
+            case 'month':
+              adjusted = base * 1.2;
+              break;
+            default:
+              adjusted = base * 1.3;
+          }
+          return (adjusted > 0 ? '+' : '') + adjusted.toFixed(1) + '%';
+        }}
+      />;
       break;
     default:
       content = <OverviewMetrics />;
