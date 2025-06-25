@@ -1,3 +1,7 @@
+"use client"
+
+
+
 import { InvestorTabs } from '@/app/features/investor/components/InvestorTabs';
 import { useState } from 'react';
 import { AgeDistributionChart } from '@/app/features/investor/components/DataPage/AgeDistributionChart';
