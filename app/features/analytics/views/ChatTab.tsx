@@ -103,18 +103,25 @@ const ChatTab: React.FC<ChatTabProps> = ({
         {/* Replace with CompactMetricCard when implemented */}
         <div className="bg-white rounded-lg shadow p-4 flex flex-col items-start">
           <div className="flex items-center mb-2"><MessageSquare className="w-5 h-5 mr-2" /><span className="font-semibold">Messages</span></div>
-          <div className="text-2xl font-bold">{`${(getAdjustedValue(516200, timePeriod) / 1000).toFixed(1)}K`}</div>
-          <div className="text-sm text-green-600">{getAdjustedPercentage('+32.4%', timePeriod)} <span className="text-gray-500">from previous period</span></div>
+          <div className="text-2xl font-bold flex items-center gap-2">
+            {(getAdjustedValue(516200, timePeriod) / 1000).toFixed(1)}K
+            <span className="text-emerald-400 text-base font-semibold">{getAdjustedPercentage('+32.4%', timePeriod)}</span>
+          </div>
         </div>
         <div className="bg-white rounded-lg shadow p-4 flex flex-col items-start">
           <div className="flex items-center mb-2"><DollarSign className="w-5 h-5 mr-2" /><span className="font-semibold">Revenue</span></div>
-          <div className="text-2xl font-bold">{`$${(getAdjustedValue(112400, timePeriod) / 1000).toFixed(1)}K`}</div>
-          <div className="text-sm text-green-600">{getAdjustedPercentage('+28.7%', timePeriod)} <span className="text-gray-500">from previous period</span></div>
+          <div className="text-2xl font-bold flex items-center gap-2">
+            ${ (getAdjustedValue(112400, timePeriod) / 1000).toFixed(1)}K
+            <span className="text-emerald-400 text-base font-semibold">{getAdjustedPercentage('+28.7%', timePeriod)}</span>
+          </div>
         </div>
+
         <div className="bg-white rounded-lg shadow p-4 flex flex-col items-start">
           <div className="flex items-center mb-2"><Clock className="w-5 h-5 mr-2" /><span className="font-semibold">Avg Response Time</span></div>
-          <div className="text-2xl font-bold">{`${getResponseTime(1.3, timePeriod)}s`}</div>
-          <div className="text-sm text-green-600">{getAdjustedPercentage('-12.4%', timePeriod)} <span className="text-gray-500">from previous period</span></div>
+          <div className="text-2xl font-bold flex items-center gap-2">
+            {getResponseTime(1.3, timePeriod)}s
+            <span className="text-emerald-400 text-base font-semibold">{getAdjustedPercentage('-12.4%', timePeriod)}</span>
+          </div>
         </div>
       </div>
 
