@@ -116,7 +116,7 @@ export function Sidebar({ onNavClick }: SidebarProps) {
     <>
       {/* Mobile Navbar */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 border-b z-50 flex items-center justify-between px-4">
-        <img src="/logo.png" alt="961 Logo" className="h-8 w-auto" />
+        <img src="/961-logo.svg" alt="961 Logo" className="h-8 w-auto" />
         <Button
           variant="ghost"
           size="icon"
@@ -149,7 +149,7 @@ export function Sidebar({ onNavClick }: SidebarProps) {
       >
         <div className="hidden md:flex items-center justify-between p-4 border-b dark:border-gray-700">
           <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="961 Logo" className="h-8 w-auto" />
+            <img src="/961-logo.svg" alt="961 Logo" className="h-8 w-auto" />
           </div>
         </div>
         <nav className="flex-1 p-2 space-y-1 overflow-y-auto md:mt-0 mt-4">
