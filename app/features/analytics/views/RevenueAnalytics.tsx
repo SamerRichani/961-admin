@@ -222,10 +222,12 @@ export function RevenueAnalytics() {
                   <div className="flex items-center space-x-4">
                     <span className="text-lg font-bold text-gray-900">${(source.amount / 1000).toFixed(1)}K</span>
                     <span className="text-sm text-blue-600 font-medium">{source.trend}</span>
-                    {source.breakdown && (
+                    {source.breakdown ? (
                       expandedSources.includes(source.source) 
                         ? <ChevronDown className="w-4 h-4 text-gray-400" />
                         : <ChevronRight className="w-4 h-4 text-gray-400" />
+                    ) : (
+                      <div className="w-4 h-4"></div> // Placeholder for consistent spacing
                     )}
                   </div>
                 </div>

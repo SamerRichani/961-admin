@@ -20,14 +20,12 @@ import {
   saveWaveEdit,
   setWaves,
 } from '@/app/features/investor/redux/sharesSlice';
-import { InvestorTabs } from '@/app/features/investor/components/InvestorTabs';
 
 export function SharesAndPricing() {
   const dispatch = useDispatch();
   const { totalShares, currentPrice, waves, editingWave, editedWave } = useSelector(
     (state: RootState) => state.shares
   );
-  const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [localTotalShares, setLocalTotalShares] = useState(totalShares);
   const [localCurrentPrice, setLocalCurrentPrice] = useState(currentPrice);
@@ -285,153 +283,148 @@ export function SharesAndPricing() {
   };
 
   return (
-    <InvestorTabs 
-      search={search}
-      onSearchChange={setSearch}
-    >
-      <div className="space-y-4 sm:space-y-6 p-4 sm:p-6 mt-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          <Card className="p-4 sm:p-6">
-            <h2 className="text-base sm:text-lg font-semibold mb-4">Share Configuration</h2>
-            <div className="space-y-3 sm:space-y-4">
-              <div>
-                <Label htmlFor="totalShares">Total Available Shares</Label>
-                <Input
-                  id="totalShares"
-                  type="number"
-                  value={localTotalShares}
-                  onChange={(e) => setLocalTotalShares(Number(e.target.value))}
-                  className="h-9 sm:h-10"
-                />
-              </div>
-              <div>
-                <Label htmlFor="currentPrice">Current Price Per Share</Label>
-                <Input
-                  id="currentPrice"
-                  type="number"
-                  value={localCurrentPrice}
-                  onChange={(e) => setLocalCurrentPrice(Number(e.target.value))}
-                  className="h-9 sm:h-10"
-                />
-              </div>
+    <div className="space-y-4 sm:space-y-6 p-4 sm:p-6 mt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        <Card className="p-4 sm:p-6">
+          <h2 className="text-base sm:text-lg font-semibold mb-4">Share Configuration</h2>
+          <div className="space-y-3 sm:space-y-4">
+            <div>
+              <Label htmlFor="totalShares">Total Available Shares</Label>
+              <Input
+                id="totalShares"
+                type="number"
+                value={localTotalShares}
+                onChange={(e) => setLocalTotalShares(Number(e.target.value))}
+                className="h-9 sm:h-10"
+              />
             </div>
-          </Card>
+            <div>
+              <Label htmlFor="currentPrice">Current Price Per Share</Label>
+              <Input
+                id="currentPrice"
+                type="number"
+                value={localCurrentPrice}
+                onChange={(e) => setLocalCurrentPrice(Number(e.target.value))}
+                className="h-9 sm:h-10"
+              />
+            </div>
+          </div>
+        </Card>
 
-          <Card className="p-4 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4">
-              <h2 className="text-base sm:text-lg font-semibold">Investment Waves</h2>
-              <Button
-                onClick={handleAddWave}
-                className="bg-[#FF0000] hover:bg-[#CC0000] w-full sm:w-auto"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                Add Wave
-              </Button>
-            </div>
-            <div className="overflow-x-auto rounded-lg border">
-              <table className="w-full min-w-[600px]">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm font-medium text-gray-500">Wave</th>
-                    <th className="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm font-medium text-gray-500">Percentage</th>
-                    <th className="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm font-medium text-gray-500">Price</th>
-                    <th className="px-3 sm:px-4 py-2 text-right text-xs sm:text-sm font-medium text-gray-500">Actions</th>
+        <Card className="p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4">
+            <h2 className="text-base sm:text-lg font-semibold">Investment Waves</h2>
+            <Button
+              onClick={handleAddWave}
+              className="bg-[#FF0000] hover:bg-[#CC0000] w-full sm:w-auto"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              Add Wave
+            </Button>
+          </div>
+          <div className="overflow-x-auto rounded-lg border">
+            <table className="w-full min-w-[600px]">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm font-medium text-gray-500">Wave</th>
+                  <th className="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm font-medium text-gray-500">Percentage</th>
+                  <th className="px-3 sm:px-4 py-2 text-left text-xs sm:text-sm font-medium text-gray-500">Price</th>
+                  <th className="px-3 sm:px-4 py-2 text-right text-xs sm:text-sm font-medium text-gray-500">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {waves.map((wave, index) => (
+                  <tr key={index}>
+                    <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium">
+                      {editingWave === index ? (
+                        <Input
+                          value={editedWave?.name || ''}
+                          onChange={(e) => dispatch(setEditedWave({ ...editedWave!, name: e.target.value }))}
+                          className="h-7 sm:h-8 text-xs sm:text-sm"
+                        />
+                      ) : (
+                        wave.name || 'Wave'
+                      )}
+                    </td>
+                    <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
+                      {editingWave === index ? (
+                        <Input
+                          type="number"
+                          value={editedWave?.percentage || 0}
+                          onChange={handlePercentageChange}
+                          className="h-7 sm:h-8 text-xs sm:text-sm"
+                        />
+                      ) : (
+                        `${wave.percentage || 0}%`
+                      )}
+                    </td>
+                    <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
+                      {editingWave === index ? (
+                        <Input
+                          type="number"
+                          value={editedWave?.price || 0}
+                          onChange={(e) => dispatch(setEditedWave({ ...editedWave!, price: Number(e.target.value) }))}
+                          className="h-7 sm:h-8 text-xs sm:text-sm"
+                        />
+                      ) : (
+                        `$${wave.price || 0}`
+                      )}
+                    </td>
+                    <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-right">
+                      <div className="flex items-center justify-end gap-1 sm:gap-2">
+                        {editingWave === index ? (
+                          <>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={handleEditCancel}
+                              className="h-7 w-7 sm:h-8 sm:w-8 p-0"
+                            >
+                              <X className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              onClick={handleEditSave}
+                              className="h-7 w-7 sm:h-8 sm:w-8 p-0 bg-[#FF0000] hover:bg-[#CC0000]"
+                            >
+                              <Save className="h-3 w-3 sm:h-4 sm:w-4" />
+                            </Button>
+                          </>
+                        ) : (
+                          <>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleEditStart(index)}
+                              className="h-7 w-7 sm:h-8 sm:w-8 p-0"
+                            >
+                              <Pencil className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => handleRemoveWave(index)}
+                              className="h-7 w-7 sm:h-8 sm:w-8 p-0"
+                            >
+                              <Minus className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />
+                            </Button>
+                          </>
+                        )}
+                      </div>
+                    </td>
                   </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {waves.map((wave, index) => (
-                    <tr key={index}>
-                      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium">
-                        {editingWave === index ? (
-                          <Input
-                            value={editedWave?.name || ''}
-                            onChange={(e) => dispatch(setEditedWave({ ...editedWave!, name: e.target.value }))}
-                            className="h-7 sm:h-8 text-xs sm:text-sm"
-                          />
-                        ) : (
-                          wave.name || 'Wave'
-                        )}
-                      </td>
-                      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
-                        {editingWave === index ? (
-                          <Input
-                            type="number"
-                            value={editedWave?.percentage || 0}
-                            onChange={handlePercentageChange}
-                            className="h-7 sm:h-8 text-xs sm:text-sm"
-                          />
-                        ) : (
-                          `${wave.percentage || 0}%`
-                        )}
-                      </td>
-                      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm">
-                        {editingWave === index ? (
-                          <Input
-                            type="number"
-                            value={editedWave?.price || 0}
-                            onChange={(e) => dispatch(setEditedWave({ ...editedWave!, price: Number(e.target.value) }))}
-                            className="h-7 sm:h-8 text-xs sm:text-sm"
-                          />
-                        ) : (
-                          `$${wave.price || 0}`
-                        )}
-                      </td>
-                      <td className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-right">
-                        <div className="flex items-center justify-end gap-1 sm:gap-2">
-                          {editingWave === index ? (
-                            <>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={handleEditCancel}
-                                className="h-7 w-7 sm:h-8 sm:w-8 p-0"
-                              >
-                                <X className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                onClick={handleEditSave}
-                                className="h-7 w-7 sm:h-8 sm:w-8 p-0 bg-[#FF0000] hover:bg-[#CC0000]"
-                              >
-                                <Save className="h-3 w-3 sm:h-4 sm:w-4" />
-                              </Button>
-                            </>
-                          ) : (
-                            <>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => handleEditStart(index)}
-                                className="h-7 w-7 sm:h-8 sm:w-8 p-0"
-                              >
-                                <Pencil className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="ghost"
-                                onClick={() => handleRemoveWave(index)}
-                                className="h-7 w-7 sm:h-8 sm:w-8 p-0"
-                              >
-                                <Minus className="h-3 w-3 sm:h-4 sm:w-4 text-gray-500" />
-                              </Button>
-                            </>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {waves.length === 0 && (
+            <div className="text-center py-6 sm:py-8 text-gray-500">
+              <p className="text-sm sm:text-base">No investment waves configured</p>
+              <p className="text-xs sm:text-sm mt-1">Click "Add Wave" to create one</p>
             </div>
-            {waves.length === 0 && (
-              <div className="text-center py-6 sm:py-8 text-gray-500">
-                <p className="text-sm sm:text-base">No investment waves configured</p>
-                <p className="text-xs sm:text-sm mt-1">Click "Add Wave" to create one</p>
-              </div>
-            )}
-          </Card>
-        </div>
+          )}
+        </Card>
       </div>
-    </InvestorTabs>
+    </div>
   );
 }

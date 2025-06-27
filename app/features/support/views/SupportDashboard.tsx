@@ -12,7 +12,7 @@ import {
   Search,
   Filter,
   MessagesSquare,
-  Ticket as TicketIcon,
+  HelpCircle,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -163,7 +163,7 @@ export function SupportDashboard() {
                 value="ticket"
                 className="text-xs flex items-center gap-1"
               >
-                <TicketIcon className="h-3 w-3" />
+                <HelpCircle className="h-3 w-3" />
                 Tickets
               </TabsTrigger>
             </TabsList>

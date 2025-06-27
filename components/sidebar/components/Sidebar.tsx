@@ -67,9 +67,8 @@ const sidebarItems = [
   {
     icon: Apps,
     label: "Apps",
-    href: "/apps/blood",
+    href: "/apps/coins",
     subItems: [
-      { icon: HeartPulse, label: "Blood", href: "/apps/blood" },
       { icon: CircleDollarSign, label: "Coins", href: "/apps/coins" },
       { icon: Coins, label: "Points", href: "/apps/points" },
       { icon: TicketCheck, label: "Events", href: "/apps/events" },
@@ -117,7 +116,7 @@ export function Sidebar({ onNavClick }: SidebarProps) {
     <>
       {/* Mobile Navbar */}
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-white dark:bg-gray-800 border-b z-50 flex items-center justify-between px-4">
-        <span className="font-black text-[#FF0000] text-3xl theme-font">961</span>
+        <img src="/logo.png" alt="961 Logo" className="h-8 w-auto" />
         <Button
           variant="ghost"
           size="icon"
@@ -150,7 +149,7 @@ export function Sidebar({ onNavClick }: SidebarProps) {
       >
         <div className="hidden md:flex items-center justify-between p-4 border-b dark:border-gray-700">
           <div className="flex items-center gap-3">
-            <span className="font-black text-[#FF0000] text-2xl theme-font">961</span>
+            <img src="/logo.png" alt="961 Logo" className="h-8 w-auto" />
           </div>
         </div>
         <nav className="flex-1 p-2 space-y-1 overflow-y-auto md:mt-0 mt-4">

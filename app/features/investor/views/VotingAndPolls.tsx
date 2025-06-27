@@ -27,7 +27,6 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { InvestorTabs } from '@/app/features/investor/components/InvestorTabs';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { CreatePollDialog } from '../components/VotingAndPollsPage/CreatePollDialog';
 import { DeletePollDialog } from '../components/VotingAndPollsPage/DeletePollDialog';
@@ -46,7 +45,6 @@ const API_BASE_URL = 'http://localhost:3001/api/investor/polls';
 export function Polls() {
   const dispatch = useDispatch();
   const { polls, newPoll } = useSelector((state: RootState) => state.polls);
-  const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [editingPoll, setEditingPoll] = useState<Poll | null>(null);
 
@@ -235,170 +233,166 @@ export function Polls() {
 
   if (isLoading) {
     return (
-      <InvestorTabs search={search} onSearchChange={setSearch}>
-        <div className="max-w-4xl mx-auto mt-6">
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
-          </div>
+      <div className="max-w-4xl mx-auto mt-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
         </div>
-      </InvestorTabs>
+      </div>
     );
   }
 
   return (
-    <InvestorTabs search={search} onSearchChange={setSearch}>
-      <div className="max-w-4xl mx-auto mt-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold">Polls</h2>
-          <CreatePollDialog onCreate={handleCreatePoll} />
-        </div>
+    <div className="max-w-4xl mx-auto mt-6">
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-2xl font-bold">Polls</h2>
+        <CreatePollDialog onCreate={handleCreatePoll} />
+      </div>
 
-        <div className="space-y-6">
-          {polls.map((poll) => (
-            <Card key={poll._id} className={cn(
-              "p-4 sm:p-6",
-              poll.status === 'ended' && "bg-slate-50/50 border-slate-200"
-            )}>
-              <div className="mb-4 sm:mb-6">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
-                  <h3 className={cn(
-                    "text-lg sm:text-xl font-semibold",
-                    poll.status === 'ended' && "text-slate-500"
-                  )}>{poll.question}</h3>
-                  <div className="flex gap-2">
-                    {poll.status === 'active' && (
-                      <>
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div>
-                                <EndPollDialog onEnd={() => handleEndPoll(poll._id)} />
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>End Poll Early</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+      <div className="space-y-6">
+        {polls.map((poll) => (
+          <Card key={poll._id} className={cn(
+            "p-4 sm:p-6",
+            poll.status === 'ended' && "bg-slate-50/50 border-slate-200"
+          )}>
+            <div className="mb-4 sm:mb-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4">
+                <h3 className={cn(
+                  "text-lg sm:text-xl font-semibold",
+                  poll.status === 'ended' && "text-slate-500"
+                )}>{poll.question}</h3>
+                <div className="flex gap-2">
+                  {poll.status === 'active' && (
+                    <>
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div>
+                              <EndPollDialog onEnd={() => handleEndPoll(poll._id)} />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>End Poll Early</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
 
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => setEditingPoll(poll)}
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Edit Poll</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              onClick={() => setEditingPoll(poll)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Edit Poll</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
 
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div>
-                                <DeletePollDialog onDelete={() => handleDeletePoll(poll._id)} />
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>Delete Poll</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </>
-                    )}
-                    {poll.status === 'ended' && (
-                      <div className="px-2 sm:px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs sm:text-sm font-medium border border-slate-200">
-                        Poll Ended
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="flex flex-wrap gap-3 sm:gap-6 text-xs sm:text-sm text-slate-500 mt-2 sm:mt-0">
-                  <span className="flex items-center gap-1.5">
-                    <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
-                    Created {new Date(poll.createdAt).toLocaleDateString()}
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
-                    {poll.status === 'ended' ? 'Ended' : `Ends ${new Date(poll.endDate).toLocaleDateString()}`}
-                  </span>
-                  <span className="flex items-center gap-1.5">
-                    <Users className="h-3 w-3 sm:h-4 sm:w-4" />
-                    {poll.totalVotes} votes ({((poll.totalVotes / poll.totalInvestors) * 100).toFixed(1)}% turnout)
-                  </span>
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div>
+                              <DeletePollDialog onDelete={() => handleDeletePoll(poll._id)} />
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Delete Poll</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </>
+                  )}
+                  {poll.status === 'ended' && (
+                    <div className="px-2 sm:px-3 py-1 bg-slate-100 text-slate-600 rounded-full text-xs sm:text-sm font-medium border border-slate-200">
+                      Poll Ended
+                    </div>
+                  )}
                 </div>
               </div>
+              <div className="flex flex-wrap gap-3 sm:gap-6 text-xs sm:text-sm text-slate-500 mt-2 sm:mt-0">
+                <span className="flex items-center gap-1.5">
+                  <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+                  Created {new Date(poll.createdAt).toLocaleDateString()}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
+                  {poll.status === 'ended' ? 'Ended' : `Ends ${new Date(poll.endDate).toLocaleDateString()}`}
+                </span>
+                <span className="flex items-center gap-1.5">
+                  <Users className="h-3 w-3 sm:h-4 sm:w-4" />
+                  {poll.totalVotes} votes ({((poll.totalVotes / poll.totalInvestors) * 100).toFixed(1)}% turnout)
+                </span>
+              </div>
+            </div>
 
-              <div className="space-y-3 sm:space-y-4">
-                {poll.options.map((option) => {
-                  const percentage = poll.totalVotes > 0 ? (option.votes / poll.totalVotes) * 100 : 0;
-                  const isLeading = option.votes === Math.max(...poll.options.map(o => o.votes));
-                  return (
-                    <div
-                      key={option._id} 
+            <div className="space-y-3 sm:space-y-4">
+              {poll.options.map((option) => {
+                const percentage = poll.totalVotes > 0 ? (option.votes / poll.totalVotes) * 100 : 0;
+                const isLeading = option.votes === Math.max(...poll.options.map(o => o.votes));
+                return (
+                  <div
+                    key={option._id} 
+                    className={cn(
+                      "p-3 sm:p-4 rounded-lg transition-colors",
+                      isLeading ? "bg-slate-50" : "bg-slate-50/50",
+                      poll.status === 'ended' && "opacity-80"
+                    )}
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 mb-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-sm sm:text-base">{option.text}</span>
+                        {isLeading && <Check className="h-3 w-3 sm:h-4 sm:w-4 text-slate-600" />}
+                      </div>
+                      <span className="font-medium text-sm sm:text-base">
+                        {option.votes} votes ({percentage.toFixed(1)}%)
+                      </span>
+                    </div>
+                    <Progress
+                      value={percentage} 
                       className={cn(
-                        "p-3 sm:p-4 rounded-lg transition-colors",
-                        isLeading ? "bg-slate-50" : "bg-slate-50/50",
+                        "h-1.5 sm:h-2",
+                        isLeading ? "bg-slate-200" : "bg-slate-100",
                         poll.status === 'ended' && "opacity-80"
                       )}
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-2 mb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="font-medium text-sm sm:text-base">{option.text}</span>
-                          {isLeading && <Check className="h-3 w-3 sm:h-4 sm:w-4 text-slate-600" />}
-                        </div>
-                        <span className="font-medium text-sm sm:text-base">
-                          {option.votes} votes ({percentage.toFixed(1)}%)
-                        </span>
-                      </div>
-                      <Progress
-                        value={percentage} 
-                        className={cn(
-                          "h-1.5 sm:h-2",
-                          isLeading ? "bg-slate-200" : "bg-slate-100",
-                          poll.status === 'ended' && "opacity-80"
-                        )}
-                      />
-                      {poll.status === 'active' && (
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="mt-2 text-xs sm:text-sm"
-                          onClick={() => handleVote(poll._id, option._id)}
-                        >
-                          Vote
-                        </Button>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        {editingPoll && (
-          <EditPollDialog
-            poll={editingPoll}
-            onClose={() => setEditingPoll(null)}
-            onSave={async (updatedPoll) => {
-              try {
-                await handleUpdatePoll(updatedPoll._id, updatedPoll);
-                setEditingPoll(null);
-              } catch (err) {
-                // Error is already handled in handleUpdatePoll
-                // Dialog stays open
-              }
-            }}
-          />
-        )}
+                    />
+                    {poll.status === 'active' && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="mt-2 text-xs sm:text-sm"
+                        onClick={() => handleVote(poll._id, option._id)}
+                      >
+                        Vote
+                      </Button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </Card>
+        ))}
       </div>
-    </InvestorTabs>
+
+      {editingPoll && (
+        <EditPollDialog
+          poll={editingPoll}
+          onClose={() => setEditingPoll(null)}
+          onSave={async (updatedPoll) => {
+            try {
+              await handleUpdatePoll(updatedPoll._id, updatedPoll);
+              setEditingPoll(null);
+            } catch (err) {
+              // Error is already handled in handleUpdatePoll
+              // Dialog stays open
+            }
+          }}
+        />
+      )}
+    </div>
   );
 }

@@ -6,9 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useDispatch, useSelector } from 'react-redux';
 import { setSearch } from '@/app/features/investor/redux/investorsSlice';
-import { setPage } from '@/components/sidebar/redux/navigationSlice';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import { RootState } from '@/redux/store';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 interface InvestorTabsProps {
   search: string;
@@ -18,8 +18,17 @@ interface InvestorTabsProps {
 
 export function InvestorTabs({ search, onSearchChange, children }: InvestorTabsProps) {
   const dispatch = useDispatch();
-  const currentPage = useSelector((state: RootState) => state.navigation.currentPage);
-  const activeTab = currentPage === 'investor' ? 'shares' : currentPage.split('/')[1] || 'shares';
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'shares';
+
+  // Handle URL-based tab navigation
+  useEffect(() => {
+    const tabFromUrl = searchParams.get('tab');
+    if (tabFromUrl && tabFromUrl !== activeTab) {
+      // Tab will be handled by the parent component
+    }
+  }, [searchParams, activeTab]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -28,25 +37,10 @@ export function InvestorTabs({ search, onSearchChange, children }: InvestorTabsP
   };
 
   const handleTabChange = (value: string) => {
-    switch (value) {
-      case "shares":
-        dispatch(setPage("investor"));
-        break;
-      case "directory":
-        dispatch(setPage("investor/directory"));
-        break;
-      case "updates":
-        dispatch(setPage("investor/updates"));
-        break;
-      case "polls":
-        dispatch(setPage("investor/polls"));
-        break;
-      case "data":
-        dispatch(setPage("investor/data"));
-        break;
-      default:
-        dispatch(setPage("investor"));
-    }
+    // Update URL with the selected tab
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', value);
+    router.push(`/investor?${params.toString()}`, { scroll: false });
   };
 
   return (

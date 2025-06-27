@@ -20,20 +20,26 @@ import {
 } from '@/components/ui/table';
 import { formatMoney, formatDate } from '@/lib/format';
 import { InvestorTabs } from '@/app/features/investor/components/InvestorTabs';
+import { Investor } from '../types';
+import { toast } from "sonner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const API_BASE_URL = 'http://localhost:3001/api/investor/directory';
 
 export function InvestorDirectory() {
   const dispatch = useDispatch();
-  const { investors, search, sortField, sortDirection } = useSelector(
-    (state: RootState) => state.investors
-  );
+  const { investors, search, sortField, sortDirection } = useSelector((state: RootState) => state.investors);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchInvestors = async () => {
       try {
-        const response = await fetch(`${API_URL}/investor/directory`);
+        const response = await fetch(`${API_BASE_URL}`);
         if (!response.ok) {
           throw new Error('Failed to fetch investors');
         }
@@ -93,74 +99,64 @@ export function InvestorDirectory() {
 
   if (isLoading) {
     return (
-      <InvestorTabs 
-        search={search}
-        onSearchChange={(value) => dispatch(setSearch(value))}
-      >
-        <div className="w-full mt-6 p-6 text-center">
-          Loading investors...
-        </div>
-      </InvestorTabs>
+      <div className="w-full mt-6 p-6 text-center">
+        Loading investors...
+      </div>
     );
   }
 
   return (
-    <InvestorTabs 
-      search={search}
-      onSearchChange={(value) => dispatch(setSearch(value))}
-    >
-      <div className="w-full mt-6">
-        <div className="p-3 sm:p-6">
-          <div className="overflow-x-auto rounded-lg border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead 
-                    onClick={() => handleSort('name')} 
-                    className="cursor-pointer hover:bg-gray-50 transition-colors text-xs sm:text-sm whitespace-nowrap"
-                  >
-                    Name {renderSortIcon('name')}
-                  </TableHead>
-                  <TableHead 
-                    onClick={() => handleSort('shares')} 
-                    className="cursor-pointer hover:bg-gray-50 transition-colors text-xs sm:text-sm whitespace-nowrap"
-                  >
-                    Total Shares {renderSortIcon('shares')}
-                  </TableHead>
-                  <TableHead className="text-xs sm:text-sm whitespace-nowrap">
-                    Avg. Price
-                  </TableHead>
-                  <TableHead 
-                    onClick={() => handleSort('investment')} 
-                    className="cursor-pointer hover:bg-gray-50 transition-colors text-xs sm:text-sm whitespace-nowrap"
-                  >
-                    Total Investment {renderSortIcon('investment')}
-                  </TableHead>
-                  <TableHead 
-                    onClick={() => handleSort('joinDate')} 
-                    className="cursor-pointer hover:bg-gray-50 transition-colors text-xs sm:text-sm whitespace-nowrap"
-                  >
-                    Join Date {renderSortIcon('joinDate')}
-                  </TableHead>
+    <div className="w-full mt-6">
+      <div className="p-3 sm:p-6">
+        <div className="overflow-x-auto rounded-lg border">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead 
+                  onClick={() => handleSort('name')} 
+                  className="cursor-pointer hover:bg-gray-50 transition-colors text-xs sm:text-sm whitespace-nowrap"
+                >
+                  Name {renderSortIcon('name')}
+                </TableHead>
+                <TableHead 
+                  onClick={() => handleSort('shares')} 
+                  className="cursor-pointer hover:bg-gray-50 transition-colors text-xs sm:text-sm whitespace-nowrap"
+                >
+                  Total Shares {renderSortIcon('shares')}
+                </TableHead>
+                <TableHead className="text-xs sm:text-sm whitespace-nowrap">
+                  Avg. Price
+                </TableHead>
+                <TableHead 
+                  onClick={() => handleSort('investment')} 
+                  className="cursor-pointer hover:bg-gray-50 transition-colors text-xs sm:text-sm whitespace-nowrap"
+                >
+                  Total Investment {renderSortIcon('investment')}
+                </TableHead>
+                <TableHead 
+                  onClick={() => handleSort('joinDate')} 
+                  className="cursor-pointer hover:bg-gray-50 transition-colors text-xs sm:text-sm whitespace-nowrap"
+                >
+                  Join Date {renderSortIcon('joinDate')}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {sortedInvestors.map((investor) => (
+                <TableRow key={investor.id}>
+                  <TableCell className="text-xs sm:text-sm">
+                    <div className="font-medium">{investor.name}</div>
+                  </TableCell>
+                  <TableCell className="text-xs sm:text-sm">{investor.totalShares.toLocaleString()}</TableCell>
+                  <TableCell className="text-xs sm:text-sm">{formatMoney(investor.averagePrice)}</TableCell>
+                  <TableCell className="text-xs sm:text-sm">{formatMoney(investor.totalInvestment)}</TableCell>
+                  <TableCell className="text-xs sm:text-sm">{formatDate(investor.joinDate)}</TableCell>
                 </TableRow>
-              </TableHeader>
-              <TableBody>
-                {sortedInvestors.map((investor) => (
-                  <TableRow key={investor.id}>
-                    <TableCell className="text-xs sm:text-sm">
-                      <div className="font-medium">{investor.name}</div>
-                    </TableCell>
-                    <TableCell className="text-xs sm:text-sm">{investor.totalShares.toLocaleString()}</TableCell>
-                    <TableCell className="text-xs sm:text-sm">{formatMoney(investor.averagePrice)}</TableCell>
-                    <TableCell className="text-xs sm:text-sm">{formatMoney(investor.totalInvestment)}</TableCell>
-                    <TableCell className="text-xs sm:text-sm">{formatDate(investor.joinDate)}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+              ))}
+            </TableBody>
+          </Table>
         </div>
       </div>
-    </InvestorTabs>
+    </div>
   );
 }

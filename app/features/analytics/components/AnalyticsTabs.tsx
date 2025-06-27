@@ -7,7 +7,7 @@ import {
   setActiveTab,
   setTimeRange,
 } from "@/app/features/analytics/redux/analyticsSlice";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import AnalyticsChatbot from "./AnalyticsChatbot";
 import {
   PieChart,
@@ -15,8 +15,10 @@ import {
   DollarSign,
   Play,
   Activity,
-  MessageCircle
+  MessageCircle,
+  Smartphone
 } from 'lucide-react';
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface AnalyticsTabsProps {
   children: ReactNode;
@@ -24,10 +26,25 @@ interface AnalyticsTabsProps {
 
 export function AnalyticsTabs({ children }: AnalyticsTabsProps) {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { timeRange, activeTab } = useAppSelector((state) => state.analytics);
+
+  // Handle URL-based tab navigation
+  useEffect(() => {
+    const tabFromUrl = searchParams.get('tab');
+    if (tabFromUrl && tabFromUrl !== activeTab) {
+      dispatch(setActiveTab(tabFromUrl));
+    }
+  }, [searchParams, dispatch, activeTab]);
 
   const handleTabChange = (value: string) => {
     dispatch(setActiveTab(value));
+    
+    // Update URL with the selected tab
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('tab', value);
+    router.push(`/analytics?${params.toString()}`, { scroll: false });
   };
 
   return (
@@ -86,6 +103,12 @@ export function AnalyticsTabs({ children }: AnalyticsTabsProps) {
                     className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-4 text-sm font-medium whitespace-nowrap flex items-center gap-2"
                   >
                     <MessageCircle className="h-4 w-4" /> Chat
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="miniapps"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#FF0000] data-[state=active]:bg-transparent px-4 text-sm font-medium whitespace-nowrap flex items-center gap-2"
+                  >
+                    <Smartphone className="h-4 w-4" /> Mini-Apps
                   </TabsTrigger>
                 </TabsList>
               </div>

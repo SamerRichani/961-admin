@@ -9,6 +9,7 @@ import ContentPerformance from './ContentPerformance';
 import { LiveMetrics } from './LiveMetrics';
 import React from 'react';
 import ChatTab from './ChatTab';
+import { MiniAppsAnalytics } from './MiniAppsAnalytics';
 
 export function AnalyticsPage() {
   const { activeTab, timeRange } = useAppSelector((state) => state.analytics);
@@ -73,6 +74,9 @@ export function AnalyticsPage() {
           return (adjusted > 0 ? '+' : '') + adjusted.toFixed(1) + '%';
         }}
       />;
+      break;
+    case 'miniapps':
+      content = <MiniAppsAnalytics />;
       break;
     default:
       content = <OverviewMetrics />;

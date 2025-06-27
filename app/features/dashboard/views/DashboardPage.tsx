@@ -272,10 +272,15 @@ export function DashboardPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">
-              Top Performing Content
+              Top Content
             </h3>
             <div className="space-y-3">
-              {topContent.map((content, i) => (
+              {Array.from({ length: 10 }, (_, i) => ({
+                views: Math.random() * 50000 + 10000,
+                growth: Math.random() * 20 + 5,
+                title: `Content Title ${i + 1}`,
+                creator: `Creator Name ${i + 1}`,
+              })).map((content, i) => (
                 <div 
                   key={i} 
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
@@ -303,7 +308,11 @@ export function DashboardPage() {
           <Card className="p-6">
             <h3 className="text-lg font-semibold mb-4">Top Creators</h3>
             <div className="space-y-3">
-              {topCreators.map((creator, i) => (
+              {Array.from({ length: 10 }, (_, i) => ({
+                earned: Math.random() * 5000 + 1000,
+                growth: Math.random() * 15 + 5,
+                name: `Creator Name ${i + 1}`,
+              })).map((creator, i) => (
                 <div 
                   key={i} 
                   className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
@@ -331,165 +340,6 @@ export function DashboardPage() {
             </div>
           </Card>
         </div>
-
-        {/* Regions */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Most Active Regions</h3>
-            <div className="space-y-4">
-              {regions.map((region, index) => (
-                <div
-                  key={region.name}
-                  className="space-y-2"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-7 h-7 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 font-bold text-xs">
-                        #{index + 1}
-                      </div>
-                      <div>
-                        <div className="font-medium text-sm">{region.name}</div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm font-medium">
-                        {formatNumber(region.users * (1 - index * 0.1))}
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        {region.growth}%
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-[#FF0000] h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${region.growth}%` }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-4">Top 5 Countries</h3>
-            <div className="space-y-4">
-              {regions.slice(0, 5).map((region, index) => (
-                <div
-                  key={region.name}
-                  className="space-y-2"
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-7 h-7 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500 font-bold text-xs">
-                        #{index + 1}
-                      </div>
-                      <div>
-                        <div className="font-medium text-sm">{region.name}</div>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="text-sm font-medium">
-                        {formatNumber(region.users * (1 - index * 0.15))}
-                      </div>
-                      <div className="text-xs text-gray-500">
-                        {region.growth}%
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-[#FF0000] h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${region.growth}%` }}
-                    ></div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-
-
-{/* Charts */}
-<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-          {/* Real-time Activity */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-6">Real-time Activity</h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis
-                  dataKey="hour"
-                  scale="auto"
-                  padding={{ left: 10, right: 10 }}
-                  allowDecimals={false}
-                  axisLine={true}
-                  tickLine={true}
-                />
-                <YAxis yAxisId="left" scale="linear" />
-                <YAxis yAxisId="right" orientation="right" scale="linear" />
-                <Tooltip />
-                <Line
-                  yAxisId="left"
-                  type="monotone"
-                  dataKey="users"
-                  name="Active Users"
-                  stroke="#FF0000"
-                  strokeWidth={2}
-                  dot={false}
-                />
-                <Line
-                  yAxisId="right"
-                  type="monotone"
-                  dataKey="posts"
-                  name="New Posts"
-                  stroke="#FF6666"
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </Card>
-
-          {/* Engagement Overview */}
-          <Card className="p-6">
-            <h3 className="text-lg font-semibold mb-6">
-              Engagement Overview
-            </h3>
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart 
-                data={engagementData} 
-                margin={{ top: 20, right: 30, left: 30, bottom: 5 }}
-                barCategoryGap={40}
-                barGap={0}
-              >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis
-                  dataKey="type"
-                  axisLine={true}
-                  tickLine={false}
-                  interval={0}
-                  padding={{ left: 30, right: 30 }}
-                />
-                <YAxis
-                  tickFormatter={(value) => formatNumber(value)}
-                  axisLine={false}
-                  tickLine={false}
-                />
-                <Tooltip
-                  formatter={(value) => formatNumber(value as number)}
-                />
-                <Bar
-                  dataKey="count"
-                  fill="#FF0000"
-                  radius={[4, 4, 0, 0]}
-                  barSize={60}
-                />
-              </BarChart>
-            </ResponsiveContainer>
-          </Card>
-        </div>
-
       </div>
     </div>
   );
