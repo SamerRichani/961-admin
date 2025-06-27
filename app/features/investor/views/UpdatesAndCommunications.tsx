@@ -33,9 +33,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { CreateUpdateDialog } from '../components/UpdatesAndCommunicationsPage/CreateUpdateDialog';
-import { DeleteUpdateDialog } from '../components/UpdatesAndCommunicationsPage/DeleteUpdateDialog';
-import { EditUpdateDialog } from '../components/UpdatesAndCommunicationsPage/EditUpdateDialog';
 import {
   Tooltip,
   TooltipContent,
