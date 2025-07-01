@@ -117,7 +117,7 @@ export function AnalyticsTabs({ children }: AnalyticsTabsProps) {
           {children}
         </Tabs>
       </div>
-      <AnalyticsChatbot />
+      {/*<AnalyticsChatbot />*/}
     </div>
   );
 }

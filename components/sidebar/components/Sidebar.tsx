@@ -26,6 +26,7 @@ import {
   HandCoins,
   ShieldCheck,
   Truck,
+  CreditCard,
 } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import { UserProfile } from "./UserProfile";
@@ -74,14 +75,16 @@ const sidebarItems = [
       { icon: TicketCheck, label: "Events", href: "/apps/events" },
     ],
   },
-  { icon: Truck, label: "Flex", href: "/flex" },
+  { icon: Truck, label: "Logistics", href: "/flex" },
   { icon: Box, label: "Moderation", href: "/moderation" },
   {
     icon: HeadphonesIcon,
     label: "Support",
     href: "/support",
   },
-  { icon: ScrollText, label: "Logs" },
+  { icon: ScrollText, label: "Logs", href: "/logs" },
+  { icon: MessageSquare, label: "Chat", href: "/chat" },
+  { icon: CreditCard, label: "Payments", href: "/payments" },
 ];
 
 interface SidebarProps {

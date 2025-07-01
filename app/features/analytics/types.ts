@@ -197,3 +197,26 @@ export interface UserDemographicsState {
   }>;
   userProfileData: UserProfileData;
 }
+
+// Types for Miniapps section
+export interface ServiceMetric {
+  label: string;
+  value: number;
+  unit?: string;
+  trend?: string;
+}
+
+export interface Service {
+  id: string;
+  name: string;
+  metrics: {
+    primaryMetric: ServiceMetric;
+    secondaryMetrics: ServiceMetric[];
+  };
+}
+
+export interface AnalyticsTabProps {
+  timePeriod: string;
+  getAdjustedValue: (baseValue: number, period: string) => number;
+  getAdjustedPercentage: (trend: string, period: string) => string;
+}
