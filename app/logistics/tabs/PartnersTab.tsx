@@ -238,7 +238,7 @@ const PartnersTab: React.FC<PartnersTabProps> = ({ onViewPartner }) => {
         isOpen={!!deletingPartner}
         partner={deletingPartner}
         onClose={() => setDeletingPartner(null)}
-        onDelete={confirmDeletePartner}
+        onConfirm={confirmDeletePartner}
       />
     </div>
   );

@@ -165,7 +165,7 @@ const ApplicationDetailsPage: React.FC<ApplicationDetailsPageProps> = ({
               </div>
               <div>
                 <p className="text-sm font-medium text-gray-700 mb-1">Submitted Date</p>
-                <p className="text-gray-900 font-medium">{new Date(application.submittedDate).toLocaleString()}</p>
+                <p className="text-gray-900 font-medium">{application.submittedDate ? new Date(application.submittedDate).toLocaleString() : ''}</p>
               </div>
             </div>
           </CardContent>
@@ -178,8 +178,8 @@ const ApplicationDetailsPage: React.FC<ApplicationDetailsPageProps> = ({
           </CardHeader>
           <CardContent>
             <div className="flex flex-wrap gap-3">
-              {application.requestedServices.map((service) => (
-                <Badge key={service} variant="outline" className="px-4 py-2 text-sm">
+              {application.requestedServices?.map((service: string, idx: number) => (
+                <Badge key={idx} variant="outline" className="px-4 py-2 text-sm">
                   {service.replace('_', ' ').toUpperCase()}
                 </Badge>
               ))}
@@ -194,7 +194,7 @@ const ApplicationDetailsPage: React.FC<ApplicationDetailsPageProps> = ({
           </CardHeader>
           <CardContent>
             <div className="space-y-8">
-              {application.proposedZones.map((zone, index) => (
+              {application.proposedZones?.map((zone: any, index: number) => (
                 <div key={index} className="border border-gray-200 rounded-lg p-6">
                   <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
                     <MapPin className="w-5 h-5 mr-2" />
@@ -229,14 +229,17 @@ const ApplicationDetailsPage: React.FC<ApplicationDetailsPageProps> = ({
                         Proposed Operating Hours
                       </h4>
                       <div className="space-y-2">
-                        {Object.entries(zone.operatingHours).map(([day, hours]) => (
-                          <div key={day} className="flex justify-between items-center p-2 bg-gray-50 rounded">
-                            <span className="text-gray-600 capitalize font-medium">{getDayName(day)}:</span>
-                            <span className={`font-medium ${hours.available ? 'text-green-600' : 'text-red-600'}`}>
-                              {hours.available ? `${hours.start} - ${hours.end}` : 'Closed'}
-                            </span>
-                          </div>
-                        ))}
+                        {Object.entries(zone.operatingHours).map(([day, hours]) => {
+                          const h = hours as { start: string; end: string; available: boolean };
+                          return (
+                            <div key={day} className="flex justify-between items-center p-2 bg-gray-50 rounded">
+                              <span className="text-gray-600 capitalize font-medium">{getDayName(day)}:</span>
+                              <span className={`font-medium ${h.available ? 'text-green-600' : 'text-red-600'}`}>
+                                {h.available ? `${h.start} - ${h.end}` : 'Closed'}
+                              </span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
@@ -278,12 +281,12 @@ const ApplicationDetailsPage: React.FC<ApplicationDetailsPageProps> = ({
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <FileText className="w-6 h-6 text-red-600" />
-              <span>Legal Documents ({application.documents.length})</span>
+              <span>Legal Documents ({application.documents?.length ?? 0})</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {application.documents.map((doc, index) => (
+              {application.documents?.map((doc: any, index: number) => (
                 <Card key={index} className="hover:shadow-md transition-shadow duration-200">
                   <CardContent className="p-4">
                     <div className="mb-4">

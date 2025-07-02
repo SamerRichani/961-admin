@@ -3,27 +3,13 @@ import { X, Save, MapPin, Clock, DollarSign } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from 'components/ui/card';
 import { Input } from 'components/ui/input';
 import { Button } from 'components/ui/button';
-
-interface Zone {
-  id: string;
-  name: string;
-  description: string;
-  coordinates: Array<{ lat: number; lng: number }>;
-  color: string;
-  rates: {
-    fixedFee: number;
-  };
-  operatingHours: {
-    [key: string]: { start: string; end: string; available: boolean };
-  };
-  estimatedDeliveryTime: string;
-}
+import { LogisticsZone } from './types';
 
 interface EditZoneModalProps {
   isOpen: boolean;
-  zone: Zone | null;
+  zone: LogisticsZone | null;
   onClose: () => void;
-  onSave: (zone: Zone) => void;
+  onSave: (zone: LogisticsZone) => void;
 }
 
 const EditZoneModal: React.FC<EditZoneModalProps> = ({
@@ -37,6 +23,7 @@ const EditZoneModal: React.FC<EditZoneModalProps> = ({
     description: '',
     cashPickupFee: 0,
     deliveryFee: 0,
+    fixedFee: 0,
     estimatedDeliveryTime: '',
     operatingHours: {
       monday: { start: '08:00', end: '22:00', available: true },
@@ -58,6 +45,7 @@ const EditZoneModal: React.FC<EditZoneModalProps> = ({
         description: zone.description,
         cashPickupFee: zone.rates.cashPickupFee,
         deliveryFee: zone.rates.deliveryFee,
+        fixedFee: zone.rates.fixedFee ?? 0,
         estimatedDeliveryTime: zone.estimatedDeliveryTime,
         operatingHours: zone.operatingHours
       });
@@ -75,7 +63,7 @@ const EditZoneModal: React.FC<EditZoneModalProps> = ({
     if (!formData.description.trim()) {
       newErrors.description = 'Description is required';
     }
-    if (formData.fixedFee <= 0) {
+    if ((formData.fixedFee ?? 0) <= 0) {
       newErrors.fixedFee = 'Fixed fee must be greater than 0';
     }
     if (formData.cashPickupFee <= 0) {
@@ -97,16 +85,17 @@ const EditZoneModal: React.FC<EditZoneModalProps> = ({
     
     if (!validateForm()) return;
 
-    const updatedZone: Zone = {
-      ...zone,
+    const updatedZone: LogisticsZone = {
+      ...zone!,
       name: formData.name,
       description: formData.description,
       rates: {
         cashPickupFee: formData.cashPickupFee,
-        deliveryFee: formData.deliveryFee
+        deliveryFee: formData.deliveryFee,
+        fixedFee: formData.fixedFee,
       },
       estimatedDeliveryTime: formData.estimatedDeliveryTime,
-      operatingHours: formData.operatingHours
+      operatingHours: formData.operatingHours,
     };
 
     onSave(updatedZone);
@@ -131,7 +120,7 @@ const EditZoneModal: React.FC<EditZoneModalProps> = ({
       operatingHours: {
         ...prev.operatingHours,
         [day]: {
-          ...prev.operatingHours[day],
+          ...prev.operatingHours[day as keyof typeof prev.operatingHours],
           [field]: value
         }
       }
@@ -144,8 +133,8 @@ const EditZoneModal: React.FC<EditZoneModalProps> = ({
       operatingHours: {
         ...prev.operatingHours,
         [day]: {
-          ...prev.operatingHours[day],
-          available: !prev.operatingHours[day].available
+          ...prev.operatingHours[day as keyof typeof prev.operatingHours],
+          available: !prev.operatingHours[day as keyof typeof prev.operatingHours].available
         }
       }
     }));

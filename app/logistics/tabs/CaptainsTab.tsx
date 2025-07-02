@@ -82,7 +82,7 @@ const CaptainsTab: React.FC = () => {
               <div>
                 <p className="text-sm text-gray-600">Total Trips</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {captains.reduce((sum: number, c: Captain) => sum + c.stats.totalTrips, 0).toLocaleString()}
+                  {captains.reduce((sum: number, c: Captain) => sum + (c.stats?.totalTrips ?? 0), 0).toLocaleString()}
                 </p>
               </div>
               <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center">
@@ -98,7 +98,7 @@ const CaptainsTab: React.FC = () => {
               <div>
                 <p className="text-sm text-gray-600">Avg $/Hour</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  ${(captains.reduce((sum: number, c: Captain) => sum + c.stats.dollarsPerHour, 0) / captains.length).toFixed(2)}
+                  ${(captains.reduce((sum: number, c: Captain) => sum + (c.stats?.dollarsPerHour ?? 0), 0) / captains.length).toFixed(2)}
                 </p>
               </div>
               <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
@@ -170,7 +170,7 @@ const CaptainsTab: React.FC = () => {
                         </div>
                         <div>
                           <p className="font-medium text-gray-900">{captain.name}</p>
-                          <p className="text-sm text-gray-500 font-mono">{captain.username}</p>
+                          <p className="text-sm text-gray-500 font-mono">{captain.username ?? ''}</p>
                         </div>
                       </div>
                     </td>
@@ -186,30 +186,30 @@ const CaptainsTab: React.FC = () => {
                       </div>
                     </td>
                     <td className="py-4 px-4">
-                      <span className="font-medium">{captain.stats.totalTrips.toLocaleString()}</span>
+                      <span className="font-medium">{captain.stats?.totalTrips?.toLocaleString() ?? '0'}</span>
                     </td>
                     <td className="py-4 px-4">
                       <span className="font-medium text-green-600">
-                        {formatCurrency(captain.stats.totalEarnings)}
+                        {formatCurrency(captain.stats?.totalEarnings ?? 0)}
                       </span>
                     </td>
                     <td className="py-4 px-4">
-                      <span className="font-medium">${captain.stats.dollarsPerHour.toFixed(2)}</span>
+                      <span className="font-medium">${(captain.stats?.dollarsPerHour ?? 0).toFixed(2)}</span>
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center text-gray-600">
                         <Clock className="w-3 h-3 mr-1" />
-                        <span className="text-sm">{captain.stats.hoursWorked}h</span>
+                        <span className="text-sm">{captain.stats?.hoursWorked ?? 0}h</span>
                       </div>
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center text-gray-600">
                         <MapPin className="w-3 h-3 mr-1" />
-                        <span className="text-sm">{captain.coverageZones.length} zone{captain.coverageZones.length !== 1 ? 's' : ''}</span>
+                        <span className="text-sm">{captain.coverageZones?.length ?? 0} zone{(captain.coverageZones?.length ?? 0) !== 1 ? 's' : ''}</span>
                       </div>
                     </td>
                     <td className="py-4 px-4">
-                      <span className="text-sm text-gray-600">{formatDate(captain.joinDate)}</span>
+                      <span className="text-sm text-gray-600">{captain.joinDate ? formatDate(captain.joinDate) : ''}</span>
                     </td>
                     <td className="py-4 px-4">
                       <div className="flex items-center justify-end space-x-2">

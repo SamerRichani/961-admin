@@ -345,12 +345,12 @@ const PartnerDetailsPage: React.FC<PartnerDetailsPageProps> = ({
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <FileText className="w-6 h-6 text-red-600" />
-                <span>Legal Documents ({partner.documents.length})</span>
+                <span>Legal Documents ({partner.documents?.length ?? 0})</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {partner.documents.map((doc, index) => (
+                {partner.documents?.map((doc: any, index: number) => (
                   <Card key={index} className="hover:shadow-md transition-shadow duration-200">
                     <CardContent className="p-4">
                       <div className="mb-4">

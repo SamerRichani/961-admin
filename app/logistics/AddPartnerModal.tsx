@@ -72,7 +72,8 @@ const AddPartnerModal: React.FC<AddPartnerModalProps> = ({
       documents: [],
       zones: [],
       overallRating: 0,
-      totalDeliveries: 0
+      totalDeliveries: 0,
+      type: formData.type
     };
 
     onAdd(newPartner);

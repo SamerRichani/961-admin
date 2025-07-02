@@ -31,4 +31,6 @@ export interface PaymentMethod {
   fees: Record<PaymentTab, PaymentFee>;
   processingTime?: string;
   providers?: Provider[];
-} 
+}
+
+export type PaymentProvider = any; // TODO: Replace 'any' with the actual PaymentProvider type definition if available. 

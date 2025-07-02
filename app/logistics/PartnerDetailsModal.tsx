@@ -277,12 +277,12 @@ const PartnerDetailsModal: React.FC<PartnerDetailsModalProps> = ({
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <FileText className="w-5 h-5 text-red-600" />
-                <span>Legal Documents ({partner.documents.length})</span>
+                <span>Legal Documents ({partner.documents?.length ?? 0})</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                {partner.documents.map((doc, index) => (
+                {partner.documents?.map((doc: any, index: number) => (
                   <div key={index} className="border border-gray-200 rounded-lg p-3 hover:border-gray-300 hover:bg-gray-50 transition-all duration-200">
                     <div className="mb-3">
                       <p className="font-medium text-gray-900 text-sm">{getDocumentName(doc.name)}</p>

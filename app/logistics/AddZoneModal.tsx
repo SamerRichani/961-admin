@@ -9,6 +9,8 @@ interface NewZone {
   description: string;
   rates: {
     fixedFee: number;
+    cashPickupFee: number;
+    deliveryFee: number;
   };
   operatingHours: {
     [key: string]: { start: string; end: string; available: boolean };
@@ -32,6 +34,7 @@ const AddZoneModal: React.FC<AddZoneModalProps> = ({
     description: '',
     cashPickupFee: 0,
     deliveryFee: 0,
+    fixedFee: 0,
     estimatedDeliveryTime: '',
     operatingHours: {
       monday: { start: '08:00', end: '22:00', available: true },
@@ -57,7 +60,7 @@ const AddZoneModal: React.FC<AddZoneModalProps> = ({
     if (!formData.description.trim()) {
       newErrors.description = 'Description is required';
     }
-    if (formData.fixedFee <= 0) {
+    if ((formData.fixedFee ?? 0) <= 0) {
       newErrors.fixedFee = 'Fixed fee must be greater than 0';
     }
     if (formData.cashPickupFee <= 0) {
@@ -83,11 +86,12 @@ const AddZoneModal: React.FC<AddZoneModalProps> = ({
       name: formData.name,
       description: formData.description,
       rates: {
-        cashPickupFee: formData.cashPickupFee,
-        deliveryFee: formData.deliveryFee
+        cashPickupFee: formData.cashPickupFee ?? 0,
+        deliveryFee: formData.deliveryFee ?? 0,
+        fixedFee: formData.fixedFee ?? 0,
       },
       estimatedDeliveryTime: formData.estimatedDeliveryTime,
-      operatingHours: formData.operatingHours
+      operatingHours: formData.operatingHours as { [key: string]: { start: string; end: string; available: boolean; } },
     };
 
     onAdd(newZone);
@@ -98,6 +102,7 @@ const AddZoneModal: React.FC<AddZoneModalProps> = ({
       description: '',
       cashPickupFee: 0,
       deliveryFee: 0,
+      fixedFee: 0,
       estimatedDeliveryTime: '',
       operatingHours: {
         monday: { start: '08:00', end: '22:00', available: true },
@@ -131,7 +136,7 @@ const AddZoneModal: React.FC<AddZoneModalProps> = ({
       operatingHours: {
         ...prev.operatingHours,
         [day]: {
-          ...prev.operatingHours[day],
+          ...prev.operatingHours[day as keyof typeof prev.operatingHours],
           [field]: value
         }
       }
@@ -144,8 +149,8 @@ const AddZoneModal: React.FC<AddZoneModalProps> = ({
       operatingHours: {
         ...prev.operatingHours,
         [day]: {
-          ...prev.operatingHours[day],
-          available: !prev.operatingHours[day].available
+          ...prev.operatingHours[day as keyof typeof prev.operatingHours],
+          available: !prev.operatingHours[day as keyof typeof prev.operatingHours].available
         }
       }
     }));
@@ -229,7 +234,7 @@ const AddZoneModal: React.FC<AddZoneModalProps> = ({
                     type="number"
                     step="0.01"
                     min="0"
-                    value={formData.fixedFee}
+                    value={formData.fixedFee ?? ''}
                     onChange={(e) => setFormData(prev => ({ ...prev, fixedFee: parseFloat(e.target.value) || 0 }))}
                     placeholder="0.00"
                     className={errors.fixedFee ? 'border-red-500' : ''}

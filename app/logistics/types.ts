@@ -18,6 +18,7 @@ export interface LogisticsPartner {
   type: 'company' | 'captain';
   companyName?: string;
   username?: string;
+  documents?: any[];
 }
 
 export interface LogisticsZone {
@@ -31,12 +32,22 @@ export interface LogisticsZone {
     fixedFee?: number;
   };
   estimatedDeliveryTime: string;
+  operatingHours: {
+    [key: string]: { start: string; end: string; available: boolean; };
+    monday: { start: string; end: string; available: boolean; };
+    tuesday: { start: string; end: string; available: boolean; };
+    wednesday: { start: string; end: string; available: boolean; };
+    thursday: { start: string; end: string; available: boolean; };
+    friday: { start: string; end: string; available: boolean; };
+    saturday: { start: string; end: string; available: boolean; };
+    sunday: { start: string; end: string; available: boolean; };
+  };
 }
 
 export interface LogisticsApplication {
   id: string;
   applicantName: string;
-  status: 'pending' | 'approved' | 'rejected';
+  status: 'pending' | 'approved' | 'rejected' | 'under_review';
   submittedAt: string;
   reviewedAt?: string;
   details: string;
@@ -46,9 +57,14 @@ export interface LogisticsApplication {
   address?: string;
   contactPerson?: string;
   email?: string;
+  phone?: string;
   requestedServices?: string[];
-  proposedZones?: string[];
+  proposedZones?: any[];
   submittedDate?: string;
+  documents?: any[];
+  reviewedBy?: string;
+  reviewedDate?: string;
+  notes?: string;
 }
 
 export interface Captain {
@@ -61,4 +77,13 @@ export interface Captain {
   totalTrips: number;
   joinedDate: string;
   lastActive: string;
+  stats?: {
+    totalTrips?: number;
+    dollarsPerHour?: number;
+    totalEarnings?: number;
+    hoursWorked?: number;
+  };
+  coverageZones?: any[];
+  username?: string;
+  joinDate?: string;
 } 
