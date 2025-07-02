@@ -1,7 +1,7 @@
 'use client';
 export const dynamic = "force-dynamic";
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Card, CardContent } from '@/components/ui/card';
 import { mockLogs } from '@/app/features/logs/mockLogs';
@@ -108,4 +108,10 @@ const Logs: React.FC = () => {
   );
 };
 
-export default Logs; 
+export default function LogsPage() {
+  return (
+    <Suspense>
+      <Logs />
+    </Suspense>
+  );
+} 
