@@ -1,8 +1,8 @@
 import React from 'react';
 import { ChevronDown, ChevronUp } from 'lucide-react';
-import { Card, CardContent } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { PaymentMethod, PaymentTab } from '../../types/payment';
+import { Card, CardContent } from 'components/ui/card';
+import { Badge } from 'components/ui/badge';
+import { PaymentMethod, PaymentTab } from 'app/payments/types';
 import { getStatusColor, formatFee, shouldShowFeeInSummary } from '../../utils/paymentUtils';
 import PaymentMethodDetails from './PaymentMethodDetails';
 

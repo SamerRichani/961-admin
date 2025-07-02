@@ -1,8 +1,8 @@
 import React from 'react';
 import { Settings } from 'lucide-react';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
-import { PaymentProvider, PaymentTab } from '../../../types/payment';
+import { Button } from 'components/ui/button';
+import { Badge } from 'components/ui/badge';
+import { PaymentProvider, PaymentTab } from 'app/payments/types';
 import { getStatusColor, formatFee } from '../../../utils/paymentUtils';
 
 interface CreditCardProvidersProps {

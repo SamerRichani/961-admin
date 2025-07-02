@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Search, Check, X, Clock, FileText, Eye, Building, User, Inbox } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../ui/card';
-import { Input } from '../../ui/input';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
-import { logisticsApplications } from '../../../data/logistics';
-import { LogisticsApplication } from '../../../types/logistics';
+import { Card, CardContent, CardHeader, CardTitle } from 'components/ui/card';
+import { Input } from 'components/ui/input';
+import { Button } from 'components/ui/button';
+import { Badge } from 'components/ui/badge';
+import { logisticsApplications } from 'app/logistics/data';
+import { LogisticsApplication } from 'app/logistics/types';
 
 interface ApplicationsTabProps {
   onViewApplication?: (application: LogisticsApplication) => void;

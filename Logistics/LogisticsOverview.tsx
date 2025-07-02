@@ -1,9 +1,9 @@
 import React from 'react';
 import { TrendingUp, Users, Package, Clock, MapPin, Star, AlertTriangle, CheckCircle, Banknote, Truck, Building, User } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { LogisticsTab } from '../../types/logistics';
+import { Card, CardContent, CardHeader, CardTitle } from 'components/ui/card';
+import { Badge } from 'components/ui/badge';
+import { Button } from 'components/ui/button';
+import { LogisticsTab } from 'app/logistics/types';
 
 interface LogisticsOverviewProps {
   onTabChange: (tab: LogisticsTab) => void;

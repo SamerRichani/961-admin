@@ -1,5 +1,5 @@
 import React from 'react';
-import { PaymentMethod, PaymentTab } from '../../types/payment';
+import { PaymentMethod, PaymentTab } from 'app/payments/types';
 import CreditCardProviders from './providers/CreditCardProviders';
 import CashPickupProviders from './providers/CashPickupProviders';
 import DigitalWalletProviders from './providers/DigitalWalletProviders';

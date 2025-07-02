@@ -1,6 +1,6 @@
 import React from 'react';
 import { BarChart3, Bike, FileText, User } from 'lucide-react';
-import { LogisticsTab } from '../../types/logistics';
+import { LogisticsTab } from 'app/logistics/types';
 
 interface LogisticsTabsProps {
   activeTab: LogisticsTab;

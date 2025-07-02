@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { X, Plus, MapPin, Clock, DollarSign } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from 'components/ui/card';
+import { Input } from 'components/ui/input';
+import { Button } from 'components/ui/button';
+import { LogisticsPartner } from 'app/logistics/types';
 
 interface NewZone {
   name: string;

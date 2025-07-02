@@ -1,6 +1,6 @@
 import React from 'react';
 import { Plus, CreditCard } from 'lucide-react';
-import { PaymentTab } from '../../types/payment';
+import { PaymentTab } from 'app/payments/types';
 
 interface PaymentTabsProps {
   activeTab: PaymentTab;

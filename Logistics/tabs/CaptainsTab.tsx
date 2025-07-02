@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Search, Play, Pause, MoreVertical, Star, Clock, DollarSign, MapPin, Users } from 'lucide-react';
-import { Card, CardContent } from '../../ui/card';
-import { Input } from '../../ui/input';
-import { Button } from '../../ui/button';
-import { Badge } from '../../ui/badge';
-import { captains as initialCaptains } from '../../../data/logistics';
-import { Captain } from '../../../types/logistics';
+import { Card, CardContent } from 'components/ui/card';
+import { Input } from 'components/ui/input';
+import { Button } from 'components/ui/button';
+import { Badge } from 'components/ui/badge';
+import { captains as initialCaptains } from 'app/logistics/data';
+import { Captain } from 'app/logistics/types';
 
 const CaptainsTab: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');

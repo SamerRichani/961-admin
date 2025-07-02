@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { PaymentTab } from '../../types/payment';
+import { PaymentTab } from 'app/payments/types';
 import { usePaymentMethods } from '../../hooks/usePaymentMethods';
 import PaymentTabs from './PaymentTabs';
 import PaymentMethodCard from './PaymentMethodCard';

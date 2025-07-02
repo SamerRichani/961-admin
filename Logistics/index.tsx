@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LogisticsTab, LogisticsPartner, LogisticsApplication } from '../../types/logistics';
+import { LogisticsTab, LogisticsPartner, LogisticsApplication } from 'app/logistics/types';
 import LogisticsTabs from './LogisticsTabs';
 import PartnersTab from './tabs/PartnersTab';
 import CaptainsTab from './tabs/CaptainsTab';

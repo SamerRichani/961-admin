@@ -1,10 +1,10 @@
 import React from 'react';
 import { X, Save, AlertCircle } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { PaymentMethod, PaymentProvider } from '../../types/payment';
+import { Button } from 'components/ui/button';
+import { Input } from 'components/ui/input';
+import { Card, CardContent, CardHeader, CardTitle } from 'components/ui/card';
+import { Badge } from 'components/ui/badge';
+import { PaymentMethod, PaymentProvider } from 'app/payments/types';
 
 interface ConfigurationModalProps {
   isOpen: boolean;
