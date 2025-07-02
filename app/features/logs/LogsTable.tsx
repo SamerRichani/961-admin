@@ -1,11 +1,11 @@
 import React from 'react';
 import { ExternalLink } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Log } from './mockLogs';
+import { LogEntry } from './mockLogs';
 import { getStatusColor, getCategoryColor } from './utils/logs';
 
 interface LogsTableProps {
-  logs: Log[];
+  logs: LogEntry[];
   onPostClick: (postId: string) => void;
 }
 
