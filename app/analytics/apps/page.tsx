@@ -1,3 +1,4 @@
+'use client';
 import { MiniAppsAnalytics } from "@/app/features/analytics/views/MiniAppsAnalytics";
 import { useAppSelector } from "@/redux/hooks";
 
