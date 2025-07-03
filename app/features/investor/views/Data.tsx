@@ -10,29 +10,13 @@ import { LocationDistributionChart } from '../components/DataPage/LocationDistri
 export function Data() {
   return (
     <div className="space-y-6 p-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Investor Demographics</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="age" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="age">Age Distribution</TabsTrigger>
-              <TabsTrigger value="gender">Gender Distribution</TabsTrigger>
-              <TabsTrigger value="location">Location Distribution</TabsTrigger>
-            </TabsList>
-            <TabsContent value="age">
-              <AgeDistributionChart />
-            </TabsContent>
-            <TabsContent value="gender">
-              <GenderDistributionChart />
-            </TabsContent>
-            <TabsContent value="location">
-              <LocationDistributionChart />
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <AgeDistributionChart />
+        <GenderDistributionChart />
+      </div>
+      <div className="mt-6">
+        <LocationDistributionChart />
+      </div>
     </div>
   );
 }

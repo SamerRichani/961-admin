@@ -20,6 +20,7 @@ import {
 } from '@/app/features/moderation/redux/moderationSlice';
 import { mockReports, mockBlockedKeywords } from '@/app/features/moderation/redux/moderationSlice';
 import type { Report } from '@/app/features/moderation/types';
+import "./moderation-no-scrollbar.css";
 
 export function ModerationPage() {
   const dispatch = useAppDispatch();
@@ -76,7 +77,7 @@ export function ModerationPage() {
             </div>
             
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-              <div className="w-full sm:w-auto overflow-x-auto">
+              <div className="w-full sm:w-auto overflow-x-auto no-scrollbar">
                 <TabsList className="h-9 w-max">
                   <TabsTrigger 
                     value="reports"

@@ -5,7 +5,6 @@ import { useSearchParams } from 'next/navigation';
 import { SharesAndPricing } from "@/app/features/investor/views/SharesAndPricing";
 import { InvestorDirectory } from "@/app/features/investor/views/InvestorDirectory";
 import { UpdatesAndCommunications } from "@/app/features/investor/views/UpdatesAndCommunications";
-import { Polls } from "@/app/features/investor/views/VotingAndPolls";
 import { Data } from "@/app/features/investor/views/Data";
 import { InvestorTabs } from "@/app/features/investor/components/InvestorTabs";
 import { useState } from 'react';
@@ -25,9 +24,6 @@ export default function Investor() {
       break;
     case 'updates':
       content = <UpdatesAndCommunications />;
-      break;
-    case 'polls':
-      content = <Polls />;
       break;
     case 'data':
       content = <Data />;

@@ -74,38 +74,25 @@ export function UpdatesAndCommunications() {
     fetchUpdates();
   }, [dispatch, toast]);
 
-  const handlePost = useCallback(async () => {
+  const handlePost = useCallback(() => {
     if (!newUpdate.trim()) return;
 
-    try {
-      const response = await fetch(`${API_BASE_URL}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content: newUpdate,
-          author: 'Anthony Kantara',
-          imageUrl: selectedImageUrl || undefined
-        }),
-      });
-
-      if (!response.ok) throw new Error('Failed to post update');
-      const newUpdateData = await response.json();
-      dispatch(addUpdate(newUpdateData));
-      dispatch(resetNewUpdate());
-      toast({
-        title: "Success",
-        description: "Your update has been posted successfully.",
-      });
-    } catch (error) {
-      console.error('Error posting update:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to post update. Please try again.",
-      });
-    }
+    // Simulate a new update visually (no API call)
+    const newUpdateData = {
+      id: Date.now().toString(),
+      content: newUpdate,
+      author: 'Anthony Kantara',
+      imageUrl: selectedImageUrl || undefined,
+      createdAt: new Date().toISOString(),
+      likes: 0,
+      comments: [],
+    };
+    dispatch(addUpdate(newUpdateData));
+    dispatch(resetNewUpdate());
+    toast({
+      title: "Success",
+      description: "Your update has been posted successfully.",
+    });
   }, [dispatch, newUpdate, selectedImageUrl, toast]);
 
   const handleLike = useCallback(async (updateId: string) => {

@@ -25,8 +25,8 @@ import {
   ArrowLeftRight,
   HandCoins,
   ShieldCheck,
-  Truck,
   CreditCard,
+  Truck,
 } from "lucide-react";
 import { SidebarItem } from "./SidebarItem";
 import { UserProfile } from "./UserProfile";
@@ -75,7 +75,7 @@ const sidebarItems = [
       { icon: TicketCheck, label: "Events", href: "/apps/events" },
     ],
   },
-  { icon: Truck, label: "Logistics", href: "/flex" },
+  { icon: Truck, label: "Logistics", href: "/logistics" },
   { icon: Box, label: "Moderation", href: "/moderation" },
   {
     icon: HeadphonesIcon,

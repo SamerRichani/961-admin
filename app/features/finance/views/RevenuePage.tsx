@@ -28,32 +28,23 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 export function RevenuePage() {
   const dispatch = useAppDispatch();
   const timeRange = useAppSelector((state) => state.finance.timeRange);
-  const { topCreators, topLocations, topAdvertisers, error } = useAppSelector((state: RootState) => state.topPerformers);
-  const [isLoading, setIsLoading] = useState(true);
-  const isFetching = useRef(false);
+  // Mock data for visual frontend-only display
+  const topCreators = [
+    { id: '1', name: 'Creator A', totalRevenue: 120000, totalActiveUsers: 1500 },
+    { id: '2', name: 'Creator B', totalRevenue: 95000, totalActiveUsers: 1200 },
+  ];
+  const topLocations = [
+    { id: '1', name: 'Lebanon', totalRevenue: 80000, totalActiveUsers: 900 },
+    { id: '2', name: 'UAE', totalRevenue: 60000, totalActiveUsers: 700 },
+  ];
+  const topAdvertisers = [
+    { id: '1', name: 'Advertiser X', totalRevenue: 40000, totalActiveUsers: 300 },
+    { id: '2', name: 'Advertiser Y', totalRevenue: 30000, totalActiveUsers: 200 },
+  ];
+  const error = null;
+  const [isLoading] = useState(false);
 
   console.log('RevenuePage render - timeRange:', timeRange, 'isLoading:', isLoading);
-
-  useEffect(() => {
-    setIsLoading(true);
-    Promise.all([
-      fetch(`${API_BASE_URL}/finance/revenue/top/creators`).then(res => res.json()),
-      fetch(`${API_BASE_URL}/finance/revenue/top/locations`).then(res => res.json()),
-      fetch(`${API_BASE_URL}/finance/revenue/top/advertisers`).then(res => res.json()),
-    ])
-      .then(([creators, locations, advertisers]) => {
-        dispatch(setTopCreators(creators));
-        dispatch(setTopLocations(locations));
-        dispatch(setTopAdvertisers(advertisers));
-        dispatch(setError(null));
-      })
-      .catch((err) => {
-        dispatch(setError(err instanceof Error ? err.message : 'Error fetching data'));
-      })
-      .finally(() => setIsLoading(false));
-  }, [dispatch]);
-
-  console.log('Current state:', { topCreators, topLocations, topAdvertisers });
 
   const totalRevenue =
     topCreators.reduce((sum, c) => sum + c.totalRevenue, 0) +
